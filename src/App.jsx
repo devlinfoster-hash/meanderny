@@ -40,33 +40,33 @@ const GUIDES = [
     cover: null,
   },
   {
-    id: "ny-firetowers",
-    title: "NY Firetowers",
-    region: "Statewide · the towers worth the climb",
+    id: "catskills-fire-towers",
+    title: "Catskills Fire Tower Challenge",
+    region: "Catskill Park · the patch, done right",
     blurb:
-      "Every restored fire tower with a view from the cab — trailheads, distances, a little history, and an honest take on which ones earn the drive.",
+      "The completion kit for the DEC's eight-tower challenge — best routes, parking, drive-times between towers, a printable log, and an offline map pack. Built to earn the patch without wasting a Saturday.",
     price: null,
     status: "coming-soon",
     url: "",
     cover: null,
   },
   {
-    id: "ny-leantos",
-    title: "NY Lean-tos",
-    region: "Statewide · a roof in the backcountry",
+    id: "catskill-waterfalls",
+    title: "Catskill Waterfalls",
+    region: "Catskill Park · find them, reach them, safely",
     blurb:
-      "New York's backcountry lean-tos, mapped and rated — where they are, what shape they're in, and what to expect when you walk up at dusk.",
+      "The falls worth chasing — where to actually park, how to reach each one legally, which are family-easy, and which have hurt people. Access and honest safety beta, not a scenery list.",
     price: null,
     status: "coming-soon",
     url: "",
     cover: null,
   },
   {
-    id: "ny-waterfalls",
-    title: "NY Waterfalls",
-    region: "Statewide · roadside to remote",
+    id: "catskill-3500-trailless",
+    title: "The Trailless 3500s",
+    region: "Catskill 3500 Club · the bushwhack peaks",
     blurb:
-      "The cascades worth chasing across New York — from pull-over-and-look to earn-the-view, with the real beta on parking, distance, and effort.",
+      "A de-risking kit for the trailless high peaks — GPX tracks, canister approaches, bail-out points, and brutally honest beta on the nettle and the navigation, so you summit and get back out.",
     price: null,
     status: "coming-soon",
     url: "",
@@ -222,7 +222,7 @@ export default function App() {
               Field guides for getting <em>out there</em> in New York.
             </h1>
             <p>
-              Carefully researched guides to camping, climbing, and wandering New York's
+              Carefully researched guides to camping, hiking and meandering New York's
               backcountry — every legal detail, water source, and distance checked against
               official DEC sources before it makes the page.
             </p>

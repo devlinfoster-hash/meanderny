@@ -29,6 +29,17 @@ const GUIDES = [
     cover: null,
   },
   {
+    id: "rambles-1863",
+    title: "Guide to Rambles from the Catskill Mountain House",
+    region: "The Catskills · Written 1863, walked today",
+    blurb:
+      "The complete 1863 trail guide — reproduced in full — with a then-and-now walking companion and an illustrated four-station map. Free to read.",
+    price: 0,
+    status: "available",
+    url: "https://devlinfoster.gumroad.com/l/rambles-1863",
+    cover: null,
+  },
+  {
     id: "longpath-catskills",
     title: "Long Path Catskills",
     region: "Catskill Forest Preserve · the southern companion",

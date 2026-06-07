@@ -50,19 +50,16 @@ const GUIDES = [
     url: "",
     cover: null,
   },
+  {
     id: "catskills-fire-towers",
     title: "Catskills Fire Tower Challenge",
     region: "Catskill Park · the patch, done right",
     blurb:
       "The completion kit for the DEC's eight-tower challenge — best routes, parking, drive-times between towers, a printable log, and an offline map pack. Built to earn the patch without wasting a Saturday.",
-    price: null,
-    status: "coming-soon",
-    url: "",
+    price: 9,
+    status: "available",
+    url: "https://devlinfoster.gumroad.com/l/catskills-fire-towers",
     cover: null,
-  },
-  {
-    id: "catskills-fire-towers",
-    title: "Catskills Fire Tower Challenge",
   },
   {
     id: "catskill-waterfalls",

@@ -50,7 +50,6 @@ const GUIDES = [
     url: "",
     cover: null,
   },
-  {
     id: "catskills-fire-towers",
     title: "Catskills Fire Tower Challenge",
     region: "Catskill Park · the patch, done right",

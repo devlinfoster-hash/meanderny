@@ -61,6 +61,10 @@ const GUIDES = [
     cover: null,
   },
   {
+    id: "catskills-fire-towers",
+    title: "Catskills Fire Tower Challenge",
+  },
+  {
     id: "catskill-waterfalls",
     title: "Catskill Waterfalls",
     region: "Catskill Park · find them, reach them, safely",

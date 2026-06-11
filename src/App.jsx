@@ -85,6 +85,37 @@ const GUIDES = [
   },
 ];
 
+/* ============================================================================
+   RESTORED ANTIQUE MAPS
+   ----------------------------------------------------------------------------
+   Same shape as GUIDES (see above). Each entry is one historical Catskill map,
+   carefully restored and offered as a high-resolution download on Gumroad.
+   ========================================================================== */
+const MAPS = [
+  {
+    id: "catskill-1879",
+    title: "Catskill Mountains, 1879",
+    region: "Restored antique survey · drawn 1879",
+    blurb:
+      "A faithfully restored 1879 map of the Catskill Mountains — cleaned, color-corrected, and prepared as a high-resolution download ready to print and frame.",
+    price: 8,
+    status: "available",
+    url: "https://devlinfoster.gumroad.com/l/catskill-1879",
+    cover: "/thumb_1879_scene.png",
+  },
+  {
+    id: "catskill-1882",
+    title: "Catskill Mountains, 1882",
+    region: "Restored antique survey · drawn 1882",
+    blurb:
+      "A faithfully restored 1882 map of the Catskill Mountains — cleaned, color-corrected, and prepared as a high-resolution download ready to print and frame.",
+    price: 9,
+    status: "available",
+    url: "https://devlinfoster.gumroad.com/l/catskill-1882",
+    cover: "/thumb_1882_scene.png",
+  },
+];
+
 /* --- reusable brand artwork ------------------------------------------------ */
 
 function Topo({ className }) {
@@ -256,6 +287,17 @@ export default function App() {
         <div className="grid">
           {GUIDES.map((g, i) => (
             <GuideCard key={g.id} guide={g} index={i} />
+          ))}
+        </div>
+
+        {/* restored antique maps */}
+        <div className="sec-head">
+          <span className="sec-eyebrow">Restored Antique Maps</span>
+          <span className="sec-line" />
+        </div>
+        <div className="grid">
+          {MAPS.map((m, i) => (
+            <GuideCard key={m.id} guide={m} index={i} />
           ))}
         </div>
 

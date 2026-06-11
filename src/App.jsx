@@ -113,6 +113,7 @@ const MAPS = [
     price: 9,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskill-1882",
+    printUrl: "https://www.redbubble.com/shop/ap/181449127",
     cover: "/thumb_1882_title.png",
     cta: "Get the Map",
   },
@@ -210,6 +211,14 @@ function GuideCard({ guide, index }) {
             <span className="soon">Coming soon</span>
           )}
         </div>
+        {available && guide.printUrl && (
+          <p className="print-link">
+            Prefer it printed?{" "}
+            <a href={guide.printUrl} target="_blank" rel="noopener noreferrer">
+              Ready-made prints on Redbubble
+            </a>
+          </p>
+        )}
       </div>
     </article>
   );
@@ -412,6 +421,9 @@ const CSS = `
 .card-buy{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .price{ font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:23px; color:var(--ink); }
 .soon{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.14em; font-size:12.5px; font-weight:600; color:var(--rust); }
+.print-link{ font-size:12.5px; color:var(--soft); margin:-6px 0 0; }
+.print-link a{ color:var(--rust); text-decoration:underline; text-underline-offset:2px; }
+.print-link a:hover{ color:var(--gold); }
 .btn{
   font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.1em;
   font-size:13px; font-weight:600; background:var(--green); color:var(--paper);

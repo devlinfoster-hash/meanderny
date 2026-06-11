@@ -97,22 +97,24 @@ const MAPS = [
     title: "Catskill Mountains, 1879",
     region: "Restored antique survey · drawn 1879",
     blurb:
-      "A faithfully restored 1879 map of the Catskill Mountains — cleaned, color-corrected, and prepared as a high-resolution download ready to print and frame.",
+      "Walton Van Loan's earliest survey — the Catskill Mountain House alone, before the grand hotels multiplied. North & South Lake, Kaaterskill Falls, and the cliff-edge escarpment ledges. Restored in three editions: color, green, and black & white.",
     price: 8,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskill-1879",
-    cover: "/thumb_1879_scene.png",
+    cover: "/thumb_1879_title.png",
+    cta: "Get the Map",
   },
   {
     id: "catskill-1882",
     title: "Catskill Mountains, 1882",
     region: "Restored antique survey · drawn 1882",
     blurb:
-      "A faithfully restored 1882 map of the Catskill Mountains — cleaned, color-corrected, and prepared as a high-resolution download ready to print and frame.",
+      "Van Loan's updated map — now adding the brand-new Hotel Kaaterskill and Laurel House. The same Catskill country three years later, with a grand hotel that had just been built. Restored in three editions, fully sourced from the Library of Congress.",
     price: 9,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskill-1882",
-    cover: "/thumb_1882_scene.png",
+    cover: "/thumb_1882_title.png",
+    cta: "Get the Map",
   },
 ];
 
@@ -201,7 +203,7 @@ function GuideCard({ guide, index }) {
                 ${guide.price}
               </span>
               <a className="btn" href={guide.url} target="_blank" rel="noopener noreferrer">
-                Get the guide <span className="arr">→</span>
+                {guide.cta || "Get the guide"} <span className="arr">→</span>
               </a>
             </>
           ) : (

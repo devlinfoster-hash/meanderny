@@ -101,12 +101,17 @@ const MAPS = [
     region: "Restored antique survey · drawn 1879",
     blurb:
       "Walton Van Loan's earliest survey — the Catskill Mountain House alone, before the grand hotels multiplied. North & South Lake, Kaaterskill Falls, and the cliff-edge escarpment ledges. Restored in three editions: color, green, and black & white.",
-    price: 8,
-    priceLabel: "Pay what you want · suggested $19",
+    price: 11.99,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskill-1879",
     cover: "/thumb_1879_title.png",
     cta: "Get the Map",
+    links: [
+      {
+        label: "Also on mugs, totes & stickers",
+        url: "https://www.redbubble.com/people/CatskillMeander/shop",
+      },
+    ],
   },
   {
     id: "catskill-1882",
@@ -114,13 +119,22 @@ const MAPS = [
     region: "Restored antique survey · drawn 1882",
     blurb:
       "Van Loan's updated map — now adding the brand-new Hotel Kaaterskill and Laurel House. The same Catskill country three years later, with a grand hotel that had just been built. Restored in three editions, fully sourced from the Library of Congress.",
-    price: 9,
-    priceLabel: "Pay what you want · suggested $19",
+    price: 11.99,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskill-1882",
-    printUrl: "https://www.redbubble.com/shop/ap/181449127",
+    domId: "framed-1882",
     cover: "/thumb_1882_title.png",
     cta: "Get the Map",
+    links: [
+      {
+        label: "Order it framed — $129",
+        url: "https://www.etsy.com/listing/4521930209/framed-1882-catskills-map-restored-van",
+      },
+      {
+        label: "Also on mugs, totes & stickers",
+        url: "https://www.redbubble.com/people/CatskillMeander/shop",
+      },
+    ],
   },
 ];
 
@@ -198,7 +212,7 @@ function GuideCover({ guide }) {
 function GuideCard({ guide, index }) {
   const available = guide.status === "available";
   return (
-    <article className="card" style={{ animationDelay: `${index * 90}ms` }}>
+    <article id={guide.domId} className="card" style={{ animationDelay: `${index * 90}ms` }}>
       <GuideCover guide={guide} />
       <div className="card-body">
         <p className="card-blurb">{guide.blurb}</p>
@@ -223,6 +237,21 @@ function GuideCard({ guide, index }) {
               Ready-made prints on Redbubble
             </a>
           </p>
+        )}
+        {available && guide.links && guide.links.length > 0 && (
+          <div className="card-links">
+            {guide.links.map((link) => (
+              <a
+                key={link.url}
+                className="card-link"
+                href={link.url}
+                target="_blank"
+                rel="noopener"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
         )}
       </div>
     </article>
@@ -295,8 +324,17 @@ export default function App() {
           </div>
         </section>
 
+        {/* in-page nav */}
+        <nav className="mny-nav" aria-label="On this page">
+          <a href="#guides">Guides</a>
+          <span className="mny-nav-sep" aria-hidden="true">·</span>
+          <a href="#maps">Maps</a>
+          <span className="mny-nav-sep" aria-hidden="true">·</span>
+          <a href="#framed-1882">Framed Prints</a>
+        </nav>
+
         {/* guides */}
-        <div className="sec-head">
+        <div id="guides" className="sec-head">
           <span className="sec-eyebrow">The Guides</span>
           <span className="sec-line" />
         </div>
@@ -307,7 +345,7 @@ export default function App() {
         </div>
 
         {/* restored antique maps */}
-        <div className="sec-head">
+        <div id="maps" className="sec-head">
           <span className="sec-eyebrow">Restored Antique Maps</span>
           <span className="sec-line" />
         </div>
@@ -353,6 +391,7 @@ export default function App() {
 /* --- styles ---------------------------------------------------------------- */
 
 const CSS = `
+html{ scroll-behavior:smooth; }
 .mny *{ box-sizing:border-box; }
 .mny{
   --green:#33452f; --green2:#445c3c; --gold:#c2872f; --rust:#a8531e;
@@ -385,6 +424,21 @@ const CSS = `
 .hero-meta{ margin-top:28px; display:flex; gap:26px; flex-wrap:wrap; font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.12em; font-size:12px; color:var(--cream); }
 .hero-meta span{ display:inline-flex; align-items:center; gap:9px; }
 .dot{ width:6px; height:6px; border-radius:50%; background:var(--gold); display:inline-block; }
+
+/* in-page nav */
+.mny-nav{
+  position:sticky; top:0; z-index:5;
+  display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
+  margin-top:18px; padding:11px 0;
+  background:rgba(245,239,225,0.92); backdrop-filter:blur(4px);
+  border-bottom:1px solid var(--line);
+  font-family:'Barlow Condensed',sans-serif; text-transform:uppercase;
+  letter-spacing:0.18em; font-size:12px; font-weight:600;
+}
+.mny-nav a{ color:var(--soft); text-decoration:none; transition:color .2s ease; }
+.mny-nav a:hover{ color:var(--rust); }
+.mny-nav-sep{ color:var(--line); }
+#guides, #maps, #framed-1882{ scroll-margin-top:62px; }
 
 /* section header */
 .sec-head{ display:flex; align-items:center; gap:16px; margin:56px 0 24px; }
@@ -430,6 +484,9 @@ const CSS = `
 .print-link{ font-size:12.5px; color:var(--soft); margin:-6px 0 0; }
 .print-link a{ color:var(--rust); text-decoration:underline; text-underline-offset:2px; }
 .print-link a:hover{ color:var(--gold); }
+.card-links{ display:flex; flex-direction:column; gap:6px; margin:-6px 0 0; }
+.card-link{ align-self:flex-start; font-size:12.5px; color:var(--rust); text-decoration:underline; text-underline-offset:2px; transition:color .2s ease; }
+.card-link:hover{ color:var(--gold); }
 .btn{
   font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.1em;
   font-size:13px; font-weight:600; background:var(--green); color:var(--paper);
@@ -460,6 +517,7 @@ const CSS = `
   .mny-mast{ flex-direction:column; gap:2px; }
 }
 @media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
   .card{ animation:none; opacity:1; transform:none; }
   .btn .arr{ transition:none; }
 }

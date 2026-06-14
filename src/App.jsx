@@ -24,6 +24,7 @@ const GUIDES = [
     blurb:
       "Seven New York state forests where you can legally pitch a tent — with rated water sources, fire rules in plain English, and a bonus offline DEC map pack.",
     price: 9,
+    priceLabel: "Pay what you want · suggested $12",
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/longpath-camping",
     cover: null,
@@ -35,6 +36,7 @@ const GUIDES = [
     blurb:
       "The complete 1863 trail guide — reproduced in full — with a then-and-now walking companion and an illustrated four-station map. Free to read.",
     price: 0,
+    priceLabel: "Free download",
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/rambles-1863",
     cover: null,
@@ -57,6 +59,7 @@ const GUIDES = [
     blurb:
       "The completion kit for the DEC's eight-tower challenge — best routes, parking, drive-times between towers, a printable log, and an offline map pack. Built to earn the patch without wasting a Saturday.",
     price: 9,
+    priceLabel: "Pay what you want · suggested $19",
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskills-fire-towers",
     cover: null,
@@ -99,6 +102,7 @@ const MAPS = [
     blurb:
       "Walton Van Loan's earliest survey — the Catskill Mountain House alone, before the grand hotels multiplied. North & South Lake, Kaaterskill Falls, and the cliff-edge escarpment ledges. Restored in three editions: color, green, and black & white.",
     price: 8,
+    priceLabel: "Pay what you want · suggested $19",
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskill-1879",
     cover: "/thumb_1879_title.png",
@@ -111,6 +115,7 @@ const MAPS = [
     blurb:
       "Van Loan's updated map — now adding the brand-new Hotel Kaaterskill and Laurel House. The same Catskill country three years later, with a grand hotel that had just been built. Restored in three editions, fully sourced from the Library of Congress.",
     price: 9,
+    priceLabel: "Pay what you want · suggested $19",
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskill-1882",
     printUrl: "https://www.redbubble.com/shop/ap/181449127",
@@ -200,8 +205,8 @@ function GuideCard({ guide, index }) {
         <div className="card-buy">
           {available ? (
             <>
-              <span className="price">
-                ${guide.price}
+              <span className={guide.priceLabel ? "price price--label" : "price"}>
+                {guide.priceLabel ?? `$${guide.price}`}
               </span>
               <a className="btn" href={guide.url} target="_blank" rel="noopener noreferrer">
                 {guide.cta || "Get the guide"} <span className="arr">→</span>
@@ -420,6 +425,7 @@ const CSS = `
 .card-blurb{ font-size:14.5px; color:var(--soft); line-height:1.55; margin:0; flex:1; }
 .card-buy{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .price{ font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:23px; color:var(--ink); }
+.price--label{ font-size:14px; font-weight:600; line-height:1.3; min-width:0; flex:1 1 auto; }
 .soon{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.14em; font-size:12.5px; font-weight:600; color:var(--rust); }
 .print-link{ font-size:12.5px; color:var(--soft); margin:-6px 0 0; }
 .print-link a{ color:var(--rust); text-decoration:underline; text-underline-offset:2px; }

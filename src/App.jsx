@@ -23,8 +23,7 @@ const GUIDES = [
     region: "Schoharie Hills & Helderbergs · Sec 29–35",
     blurb:
       "Seven New York state forests where you can legally pitch a tent — with rated water sources, fire rules in plain English, and a bonus offline DEC map pack.",
-    price: 9,
-    priceLabel: "Pay what you want · suggested $12",
+    price: 11.99,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/longpath-camping",
     cover: null,
@@ -58,8 +57,7 @@ const GUIDES = [
     region: "Catskill Park · the patch, done right",
     blurb:
       "The completion kit for the DEC's eight-tower challenge — best routes, parking, drive-times between towers, a printable log, and an offline map pack. Built to earn the patch without wasting a Saturday.",
-    price: 9,
-    priceLabel: "Pay what you want · suggested $19",
+    price: 11.99,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskills-fire-towers",
     cover: null,

@@ -141,9 +141,11 @@ const MAPS = [
     price: 11.99,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskill-1879",
-    // TODO: swap in a sharper, properly-cropped 1879 map detail (3:2) when ready,
-    // mirroring the 1882 card (add coverAlt + coverW/coverH at that point).
-    cover: "/thumb_1879_title.png",
+    cover: "/map-1879-card.jpg",
+    coverAlt:
+      "Detail of Walton Van Loan's 1879 map showing North and South Lakes, the Catskill Mountain House and South Mountain",
+    coverW: 1200,
+    coverH: 800,
     cta: "Get the Map",
     links: [
       {

@@ -71,7 +71,7 @@ const GUIDES = [
     },
     links: [
       {
-        label: "Free companion page",
+        label: "Free companion page (Mohawk Valley Almanac)",
         url: "https://www.mohawkvalleyalmanac.com/backcountry-camping",
       },
     ],
@@ -363,6 +363,16 @@ function SiteFooter() {
         <a href="/">Guides</a>
         <a href="/contact">Contact</a>
       </nav>
+      <p className="foot-fam">
+        Also from Catskill Meandering:{" "}
+        <a href="https://hudsonvalleyalmanac.com/" target="_blank" rel="noopener">
+          Hudson Valley Almanac
+        </a>{" "}
+        ·{" "}
+        <a href="https://www.mohawkvalleyalmanac.com/" target="_blank" rel="noopener">
+          Mohawk Valley Almanac
+        </a>
+      </p>
       <p className="foot-disc">
         Unofficial field guides. Not affiliated with or endorsed by the NYS Department of
         Environmental Conservation, the New York–New Jersey Trail Conference, or Avenza
@@ -542,6 +552,10 @@ function ContactView() {
       <a className="page-mail" href={CONTACT_MAILTO}>
         {CONTACT_EMAIL}
       </a>
+      <p className="page-note">
+        This address belongs to the Mohawk Valley Almanac, which hosts the companion page for
+        Long Path North.
+      </p>
     </section>
   );
 }
@@ -737,6 +751,9 @@ html{ scroll-behavior:smooth; }
 .foot-nav{ display:flex; gap:18px; flex-wrap:wrap; font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.14em; font-size:12px; font-weight:600; }
 .foot-nav a{ color:var(--soft); text-decoration:none; transition:color .2s ease; }
 .foot-nav a:hover{ color:var(--copper); }
+.foot-fam{ font-size:12.5px; color:var(--soft); line-height:1.55; margin:0; }
+.foot-fam a{ color:var(--copper); text-decoration:underline; text-underline-offset:2px; transition:color .2s ease; }
+.foot-fam a:hover{ color:var(--rust); }
 .foot-disc{ font-size:12px; color:var(--soft); line-height:1.55; max-width:82ch; margin:0; }
 
 /* simple content page (contact) */
@@ -745,6 +762,7 @@ html{ scroll-behavior:smooth; }
 .page-text{ font-size:16px; color:var(--ink); line-height:1.62; margin:0 0 24px; }
 .page-mail{ font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:21px; letter-spacing:0.02em; color:var(--copper); text-decoration:underline; text-underline-offset:3px; transition:color .2s ease; }
 .page-mail:hover{ color:var(--rust); }
+.page-note{ font-size:14px; color:var(--soft); line-height:1.6; margin:18px 0 0; }
 
 @media (max-width:900px){
   .grid--maps{ grid-template-columns:repeat(2, 1fr); }

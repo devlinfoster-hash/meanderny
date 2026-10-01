@@ -6,6 +6,27 @@ const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
   "MeanderNY correction"
 )}`;
 
+/* Set document title, meta description, and canonical URL for a client-rendered
+   route. Returns a cleanup that restores the previous values. */
+function setDocumentHead({ title, description, canonical }) {
+  if (typeof document === "undefined") return () => {};
+  const descEl = document.querySelector('meta[name="description"]');
+  const canonEl = document.querySelector('link[rel="canonical"]');
+  const prev = {
+    title: document.title,
+    description: descEl ? descEl.getAttribute("content") : null,
+    canonical: canonEl ? canonEl.getAttribute("href") : null,
+  };
+  if (title !== undefined) document.title = title;
+  if (description !== undefined && descEl) descEl.setAttribute("content", description);
+  if (canonical !== undefined && canonEl) canonEl.setAttribute("href", canonical);
+  return () => {
+    document.title = prev.title;
+    if (descEl && prev.description !== null) descEl.setAttribute("content", prev.description);
+    if (canonEl && prev.canonical !== null) canonEl.setAttribute("href", prev.canonical);
+  };
+}
+
 /* ============================================================================
    THE ONLY THING YOU EDIT TO ADD A GUIDE
    ----------------------------------------------------------------------------
@@ -406,22 +427,16 @@ function HomeView() {
 }
 
 function ContactView() {
-  useEffect(() => {
-    const prevTitle = document.title;
-    document.title = "Contact and corrections — MeanderNY";
-    const meta = document.querySelector('meta[name="description"]');
-    const prevDesc = meta ? meta.getAttribute("content") : null;
-    if (meta) {
-      meta.setAttribute(
-        "content",
-        "Report a mistake, a closed business, or a changed trail in a MeanderNY field guide. Corrections are folded into the next edition."
-      );
-    }
-    return () => {
-      document.title = prevTitle;
-      if (meta && prevDesc !== null) meta.setAttribute("content", prevDesc);
-    };
-  }, []);
+  useEffect(
+    () =>
+      setDocumentHead({
+        title: "Contact and corrections — MeanderNY",
+        description:
+          "Report a mistake, a closed business, or a changed trail in a MeanderNY field guide. Corrections are folded into the next edition.",
+        canonical: "https://www.meanderny.com/contact",
+      }),
+    []
+  );
 
   return (
     <section className="page">

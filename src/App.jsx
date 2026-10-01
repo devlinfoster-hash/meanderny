@@ -1,5 +1,11 @@
 import { useEffect } from "react";
 
+/* Contact address — defined once, reused for the mailto link. */
+const CONTACT_EMAIL = "hello@mohawkvalleyalmanac.com";
+const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+  "MeanderNY correction"
+)}`;
+
 /* ============================================================================
    THE ONLY THING YOU EDIT TO ADD A GUIDE
    ----------------------------------------------------------------------------
@@ -22,11 +28,18 @@ const GUIDES = [
     title: "Long Path North",
     region: "Schoharie Hills & Helderbergs · Sec 29–35",
     blurb:
-      "Seven New York state forests where you can legally pitch a tent — with rated water sources, fire rules in plain English, and a bonus offline DEC map pack.",
+      "Seven New York state forests where you can legally pitch a tent, with rated water sources, day-by-day itineraries, resupply stops, fire rules in plain English, and a bonus offline DEC map pack.",
+    note: "First Edition · checked through September 2026",
     price: 11.99,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/longpath-camping",
     cover: null,
+    links: [
+      {
+        label: "Free companion page",
+        url: "https://www.mohawkvalleyalmanac.com/backcountry-camping",
+      },
+    ],
   },
   {
     id: "rambles-1863",
@@ -73,17 +86,6 @@ const GUIDES = [
     url: "",
     cover: null,
   },
-  {
-    id: "catskill-3500-trailless",
-    title: "The Trailless 3500s",
-    region: "Catskill 3500 Club · the bushwhack peaks",
-    blurb:
-      "A de-risking kit for the trailless high peaks — GPX tracks, canister approaches, bail-out points, and brutally honest beta on the nettle and the navigation, so you summit and get back out.",
-    price: null,
-    status: "coming-soon",
-    url: "",
-    cover: null,
-  },
 ];
 
 /* ============================================================================
@@ -106,8 +108,8 @@ const MAPS = [
     cta: "Get the Map",
     links: [
       {
-        label: "Also on mugs, totes & stickers",
-        url: "https://www.redbubble.com/people/CatskillMeander/shop",
+        label: "More Catskill maps on Redbubble",
+        url: "https://www.redbubble.com/people/CatskillMeander/shop?collections=4530751",
       },
     ],
   },
@@ -130,7 +132,7 @@ const MAPS = [
       },
       {
         label: "Also on mugs, totes & stickers",
-        url: "https://www.redbubble.com/people/CatskillMeander/shop",
+        url: "https://www.redbubble.com/shop/ap/181449127",
       },
     ],
   },
@@ -214,6 +216,7 @@ function GuideCard({ guide, index }) {
       <GuideCover guide={guide} />
       <div className="card-body">
         <p className="card-blurb">{guide.blurb}</p>
+        {guide.note && <p className="card-note">{guide.note}</p>}
         <div className="card-buy">
           {available ? (
             <>
@@ -256,7 +259,186 @@ function GuideCard({ guide, index }) {
   );
 }
 
-/* --- the page -------------------------------------------------------------- */
+/* --- shared chrome --------------------------------------------------------- */
+
+function SiteHeader() {
+  return (
+    <>
+      <header className="mny-mast">
+        <a className="mny-word" href="/">
+          MeanderNY
+        </a>
+        <nav className="mny-mast-nav" aria-label="Primary">
+          <span className="mny-tag">A Catskill Meandering Project</span>
+          <a href="/contact">Contact</a>
+        </nav>
+      </header>
+      <div className="mny-rule" />
+    </>
+  );
+}
+
+function SiteFooter() {
+  return (
+    <footer className="foot">
+      <div className="foot-row">
+        <span className="foot-word">
+          MeanderNY
+          <span>The field-guide side of Catskill Meandering</span>
+        </span>
+        <span className="foot-meta">© 2026 · meanderny.com</span>
+      </div>
+      <nav className="foot-nav" aria-label="Footer">
+        <a href="/">Guides</a>
+        <a href="/contact">Contact</a>
+      </nav>
+      <p className="foot-disc">
+        Unofficial field guides. Not affiliated with or endorsed by the NYS Department of
+        Environmental Conservation, the New York–New Jersey Trail Conference, or Avenza
+        Systems. Always confirm current rules, closures, and conditions with official sources
+        before you head out.
+      </p>
+    </footer>
+  );
+}
+
+/* --- pages ----------------------------------------------------------------- */
+
+function HomeView() {
+  return (
+    <>
+      {/* hero */}
+      <section className="hero">
+        <Topo className="hero-topo" />
+        <div className="hero-vig" />
+        <RouteMotif className="hero-route" />
+        <div className="hero-inner">
+          <span className="hero-eyebrow">Field Guides for New York's Outdoors</span>
+          <h1>
+            Field guides for getting <em>out there</em> in New York.
+          </h1>
+          <p>
+            Carefully researched guides to camping, hiking and meandering New York's
+            backcountry, built on official DEC and NYNJTC sources, with every detail we
+            couldn't confirm clearly marked.
+          </p>
+          <div className="hero-meta">
+            <span>
+              <i className="dot" />Sources shown, unknowns marked
+            </span>
+            <span>
+              <i className="dot" />Companions to the official guides
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* in-page nav */}
+      <nav className="mny-nav" aria-label="On this page">
+        <a href="#guides">Guides</a>
+        <span className="mny-nav-sep" aria-hidden="true">·</span>
+        <a href="#maps">Maps</a>
+        <span className="mny-nav-sep" aria-hidden="true">·</span>
+        <a href="#framed-1882">Framed Prints</a>
+      </nav>
+
+      {/* guides */}
+      <div id="guides" className="sec-head">
+        <span className="sec-eyebrow">The Guides</span>
+        <span className="sec-line" />
+      </div>
+      <div className="grid">
+        {GUIDES.map((g, i) => (
+          <GuideCard key={g.id} guide={g} index={i} />
+        ))}
+      </div>
+
+      {/* restored antique maps */}
+      <div id="maps" className="sec-head">
+        <span className="sec-eyebrow">Restored Antique Maps</span>
+        <span className="sec-line" />
+      </div>
+      <div className="grid">
+        {MAPS.map((m, i) => (
+          <GuideCard key={m.id} guide={m} index={i} />
+        ))}
+      </div>
+
+      {/* antique photographs and postcards */}
+      <div className="sec-head">
+        <span className="sec-eyebrow">Antique photographs and postcards</span>
+        <span className="sec-line" />
+      </div>
+      <div className="grid">
+        <article className="card">
+          <div className="card-body">
+            <p className="card-blurb">
+              Restored 1900s photographs, postcards, and historical trail guides of the
+              Catskills.
+            </p>
+            <div className="card-buy">
+              <a
+                className="btn"
+                href="https://www.etsy.com/shop/TheForgottenPress"
+                target="_blank"
+                rel="noopener"
+              >
+                Visit The Forgotten Press on Etsy <span className="arr">→</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      {/* who makes these */}
+      <section className="maker">
+        <span className="sec-eyebrow">Who makes these</span>
+        <p>
+          MeanderNY guides are made by Devlin Foster, a New York hiker. Land rules, water,
+          distances, and coordinates come from official NYS DEC and NYNJTC sources, plus hiker
+          reports and mapping data credited in each guide. When something can't be confirmed,
+          the guide says so instead of guessing. These are unofficial companions to the
+          official guides, not replacements for them.
+        </p>
+      </section>
+    </>
+  );
+}
+
+function ContactView() {
+  useEffect(() => {
+    const prevTitle = document.title;
+    document.title = "Contact and corrections — MeanderNY";
+    const meta = document.querySelector('meta[name="description"]');
+    const prevDesc = meta ? meta.getAttribute("content") : null;
+    if (meta) {
+      meta.setAttribute(
+        "content",
+        "Report a mistake, a closed business, or a changed trail in a MeanderNY field guide. Corrections are folded into the next edition."
+      );
+    }
+    return () => {
+      document.title = prevTitle;
+      if (meta && prevDesc !== null) meta.setAttribute("content", prevDesc);
+    };
+  }, []);
+
+  return (
+    <section className="page">
+      <h1 className="page-title">Contact and corrections</h1>
+      <p className="page-text">
+        Found a mistake, a business that has closed, or a trail that has changed? Email me.
+        Please include the guide, the page or section, and what you saw. Corrections are folded
+        into the next edition.
+      </p>
+      <a className="page-mail" href={CONTACT_MAILTO}>
+        {CONTACT_EMAIL}
+      </a>
+    </section>
+  );
+}
+
+/* --- the app --------------------------------------------------------------- */
 
 export default function App() {
   useEffect(() => {
@@ -279,6 +461,9 @@ export default function App() {
     }
   }, []);
 
+  const path = typeof window !== "undefined" ? window.location.pathname : "/";
+  const isContact = path === "/contact" || path === "/contact/";
+
   return (
     <div className="mny">
       <style>{CSS}</style>
@@ -289,98 +474,9 @@ export default function App() {
       </div>
 
       <div className="mny-wrap">
-        {/* masthead */}
-        <header className="mny-mast">
-          <span className="mny-word">MeanderNY</span>
-          <span className="mny-tag">A Catskill Meandering Project</span>
-        </header>
-        <div className="mny-rule" />
-
-        {/* hero */}
-        <section className="hero">
-          <Topo className="hero-topo" />
-          <div className="hero-vig" />
-          <RouteMotif className="hero-route" />
-          <div className="hero-inner">
-            <span className="hero-eyebrow">Field Guides for New York's Outdoors</span>
-            <h1>
-              Field guides for getting <em>out there</em> in New York.
-            </h1>
-            <p>
-              Carefully researched guides to camping, hiking and meandering New York's
-              backcountry — every legal detail, water source, and distance checked against
-              official DEC sources before it makes the page.
-            </p>
-            <div className="hero-meta">
-              <span>
-                <i className="dot" />Verified, not aggregated
-              </span>
-              <span>
-                <i className="dot" />Companions to the official guides
-              </span>
-            </div>
-          </div>
-        </section>
-
-        {/* in-page nav */}
-        <nav className="mny-nav" aria-label="On this page">
-          <a href="#guides">Guides</a>
-          <span className="mny-nav-sep" aria-hidden="true">·</span>
-          <a href="#maps">Maps</a>
-          <span className="mny-nav-sep" aria-hidden="true">·</span>
-          <a href="#framed-1882">Framed Prints</a>
-        </nav>
-
-        {/* guides */}
-        <div id="guides" className="sec-head">
-          <span className="sec-eyebrow">The Guides</span>
-          <span className="sec-line" />
-        </div>
-        <div className="grid">
-          {GUIDES.map((g, i) => (
-            <GuideCard key={g.id} guide={g} index={i} />
-          ))}
-        </div>
-
-        {/* restored antique maps */}
-        <div id="maps" className="sec-head">
-          <span className="sec-eyebrow">Restored Antique Maps</span>
-          <span className="sec-line" />
-        </div>
-        <div className="grid">
-          {MAPS.map((m, i) => (
-            <GuideCard key={m.id} guide={m} index={i} />
-          ))}
-        </div>
-
-        {/* who makes these */}
-        <section className="maker">
-          <span className="sec-eyebrow">Who makes these</span>
-          <p>
-            MeanderNY guides are made by Devlin Foster, a New York hiker who's walked these
-            trails. Every legal claim, water source, distance, and coordinate is checked against
-            official NYS DEC and NYNJTC sources — never blog aggregators or guesswork. If a fact
-            can't be verified, it doesn't go in. These are unofficial companions to the official
-            guides, not replacements for them.
-          </p>
-        </section>
-
-        {/* footer */}
-        <footer className="foot">
-          <div className="foot-row">
-            <span className="foot-word">
-              MeanderNY
-              <span>The field-guide side of Catskill Meandering</span>
-            </span>
-            <span className="foot-meta">© 2026 · meanderny.com</span>
-          </div>
-          <p className="foot-disc">
-            Unofficial field guides. Not affiliated with or endorsed by the NYS Department of
-            Environmental Conservation, the New York–New Jersey Trail Conference, or Avenza
-            Systems. Always confirm current rules, closures, and conditions with official sources
-            before you head out.
-          </p>
-        </footer>
+        <SiteHeader />
+        {isContact ? <ContactView /> : <HomeView />}
+        <SiteFooter />
       </div>
     </div>
   );
@@ -405,8 +501,11 @@ html{ scroll-behavior:smooth; }
 
 /* masthead */
 .mny-mast{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:28px 0 14px; }
-.mny-word{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.26em; font-weight:700; font-size:19px; color:var(--green); }
+.mny-word{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.26em; font-weight:700; font-size:19px; color:var(--green); text-decoration:none; }
 .mny-tag{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.16em; font-size:11.5px; color:var(--soft); }
+.mny-mast-nav{ display:flex; align-items:baseline; gap:18px; flex-wrap:wrap; }
+.mny-mast-nav a{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.16em; font-size:11.5px; font-weight:600; color:var(--rust); text-decoration:none; transition:color .2s ease; }
+.mny-mast-nav a:hover{ color:var(--gold); }
 .mny-rule{ height:1px; background:var(--line); }
 
 /* hero */
@@ -474,8 +573,9 @@ html{ scroll-behavior:smooth; }
 
 /* card body */
 .card-body{ padding:18px 20px 20px; display:flex; flex-direction:column; gap:16px; flex:1; }
-.card-blurb{ font-size:14.5px; color:var(--soft); line-height:1.55; margin:0; flex:1; }
-.card-buy{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.card-blurb{ font-size:14.5px; color:var(--soft); line-height:1.55; margin:0; }
+.card-note{ font-size:12px; font-style:italic; color:var(--soft); margin:-6px 0 0; }
+.card-buy{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:auto; }
 .price{ font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:23px; color:var(--ink); }
 .price--label{ font-size:14px; font-weight:600; line-height:1.3; min-width:0; flex:1 1 auto; }
 .soon{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.14em; font-size:12.5px; font-weight:600; color:var(--rust); }
@@ -505,7 +605,17 @@ html{ scroll-behavior:smooth; }
 .foot-word{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.2em; font-weight:700; font-size:14px; color:var(--green); }
 .foot-word span{ display:block; text-transform:none; letter-spacing:0; font-weight:400; font-style:italic; font-size:12.5px; color:var(--soft); font-family:'Lora',serif; margin-top:4px; }
 .foot-meta{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.14em; font-size:12px; color:var(--soft); }
+.foot-nav{ display:flex; gap:18px; flex-wrap:wrap; font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.14em; font-size:12px; font-weight:600; }
+.foot-nav a{ color:var(--soft); text-decoration:none; transition:color .2s ease; }
+.foot-nav a:hover{ color:var(--rust); }
 .foot-disc{ font-size:12px; color:var(--soft); line-height:1.55; max-width:82ch; margin:0; }
+
+/* simple content page (contact) */
+.page{ margin-top:48px; max-width:62ch; }
+.page-title{ font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:36px; line-height:1.08; letter-spacing:-0.01em; color:var(--green); margin:0 0 18px; }
+.page-text{ font-size:16px; color:var(--ink); line-height:1.62; margin:0 0 24px; }
+.page-mail{ font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:21px; letter-spacing:0.02em; color:var(--rust); text-decoration:underline; text-underline-offset:3px; transition:color .2s ease; }
+.page-mail:hover{ color:var(--gold); }
 
 @media (max-width:640px){
   .hero-inner{ padding:40px 26px 36px; }

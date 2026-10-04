@@ -154,14 +154,17 @@ const GUIDES = [
     url: "https://devlinfoster.gumroad.com/l/long-path-south",
   },
   {
+    // Off sale while the guide is rewritten (Gumroad product deleted). To restore:
+    // status "available", price 11.99,
+    // url "https://devlinfoster.gumroad.com/l/catskills-fire-towers" (or the new listing).
     id: "catskills-fire-towers",
     title: "Catskills Fire Tower Challenge",
     subtitle: "Catskill Park · the patch, done right",
     blurb:
       "The completion kit for the DEC's eight-tower challenge — best routes, parking, drive-times between towers, a printable log, and an offline map pack. Built to earn the patch without wasting a Saturday.",
-    price: 11.99,
-    status: "available",
-    url: "https://devlinfoster.gumroad.com/l/catskills-fire-towers",
+    price: null,
+    status: "coming-soon",
+    url: "",
   },
   {
     id: "rambles-1863",
@@ -500,9 +503,8 @@ function SiteFooter() {
         </p>
         <p className="foot-disc">
           Unofficial field guides. Not affiliated with or endorsed by the NYS Department of
-          Environmental Conservation, the New York–New Jersey Trail Conference, or Avenza
-          Systems. Always confirm current rules, closures, and conditions with official sources
-          before you head out.
+          Environmental Conservation or the New York–New Jersey Trail Conference. Always confirm
+          current rules, closures, and conditions with official sources before you head out.
         </p>
       </div>
     </footer>

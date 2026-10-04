@@ -6,6 +6,10 @@ const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
   "MeanderNY correction"
 )}`;
 
+/* Barnes & Noble: button text for B&N listings, and the author page. */
+const BN_CTA = "Get it on Barnes & Noble";
+const BN_AUTHOR_URL = "https://www.barnesandnoble.com/authors/devlin-foster?contributorId=33345836";
+
 /* Set document title, meta description, and canonical URL for a client-rendered
    route. Returns a cleanup that restores the previous values. */
 function setDocumentHead({ title, description, canonical }) {
@@ -68,7 +72,9 @@ const FEATURED_SERIES = "long-path";
      title      guide name
      subtitle   one line under the title (for a series book: "From to To")
      blurb      one sentence of what's inside
-     price      number in dollars; priceLabel (optional) replaces it, e.g. "Free download"
+     price      OPTIONAL number in dollars; leave out (or null) to show the button with no
+                price, e.g. for Barnes & Noble, which shows its own price.
+                priceLabel (optional) replaces it, e.g. "Free download"
      url        the Gumroad product URL ("" = card shows without price or button)
      status     "available" -> card with price + button
                 "coming-soon" -> compact row in "Coming soon", no link
@@ -78,6 +84,10 @@ const FEATURED_SERIES = "long-path";
      cta        OPTIONAL button text (default "Get the guide")
      note       OPTIONAL small line under the blurb
      links      OPTIONAL [{ label, url }] secondary links under the button
+     label      OPTIONAL small label above the title of a guide outside a series
+                (default "MeanderNY Field Guide"; "" hides it)
+     section    OPTIONAL "also-by" -> the lower-key "Also by Devlin Foster" section
+                near the bottom instead of "More guides"
 
    Series books (in the series section, cards ordered by `book`):
      series     key into SERIES, e.g. "long-path"
@@ -90,7 +100,8 @@ const FEATURED_SERIES = "long-path";
      kind: "bundle", series, title, blurb, price, url, badge, cta
      "$xx.xx separately" is added up automatically from the series' books.
 
-   Guides without `series` go in "More guides".
+   Guides without `series` go in "More guides" (or "Also by Devlin Foster" with
+   section: "also-by").
    ========================================================================== */
 const GUIDES = [
   {
@@ -185,9 +196,41 @@ const GUIDES = [
     subtitle: "Catskill Park · find them, reach them, safely",
     blurb:
       "The falls worth chasing — where to actually park, how to reach each one legally, which are family-easy, and which have hurt people. Access and honest safety beta, not a scenery list.",
-    price: null,
     status: "available",
-    url: "", // store link to come; the price and button appear once url and price are set
+    url: "https://www.barnesandnoble.com/w/catskill-waterfalls-devlin-foster/1151459185",
+    cta: BN_CTA,
+  },
+  {
+    id: "trails-that-say-yes",
+    title: "Trails That Say Yes",
+    label: "",
+    status: "available",
+    url: "https://www.barnesandnoble.com/w/trails-that-say-yes-devlin-foster/1151457321",
+    cta: BN_CTA,
+  },
+  {
+    id: "closer-than-you-think",
+    title: "Closer Than You Think",
+    label: "",
+    status: "available",
+    url: "https://www.barnesandnoble.com/w/closer-than-you-think-devlin-foster/1151458991",
+    cta: BN_CTA,
+  },
+  {
+    id: "choose-your-own-saturday",
+    title: "Choose Your Own Saturday",
+    label: "",
+    status: "available",
+    url: "https://www.barnesandnoble.com/w/choose-your-own-saturday-devlin-foster/1151479117",
+    cta: BN_CTA,
+  },
+  {
+    id: "hudson-valley-finds",
+    title: "Hudson Valley Finds",
+    label: "",
+    status: "available",
+    url: "https://www.barnesandnoble.com/w/hudson-valley-finds-devlin-foster/1151479099",
+    cta: BN_CTA,
   },
   {
     id: "different-overlanding",
@@ -204,6 +247,24 @@ const GUIDES = [
     price: null,
     status: "coming-soon",
     url: "",
+  },
+  {
+    id: "world-kitchen-on-a-budget",
+    section: "also-by",
+    title: "The World Kitchen on a Budget",
+    label: "",
+    status: "available",
+    url: "https://www.barnesandnoble.com/w/the-world-kitchen-on-a-budget-devlin-foster/1151323091",
+    cta: BN_CTA,
+  },
+  {
+    id: "when-the-numbers-change",
+    section: "also-by",
+    title: "When the Numbers Change",
+    label: "",
+    status: "available",
+    url: "https://www.barnesandnoble.com/w/when-the-numbers-change-devlin-foster/1151359465",
+    cta: BN_CTA,
   },
 ];
 
@@ -320,6 +381,7 @@ function CoverFan({ books, className, label }) {
 }
 
 function Price({ guide }) {
+  if (guide.priceLabel == null && guide.price == null) return null;
   return (
     <span className={guide.priceLabel ? "price price--label" : "price"}>
       {guide.priceLabel ?? formatPrice(guide.price)}
@@ -371,7 +433,9 @@ function GuideCard({ guide }) {
       )}
       <div className="card-body">
         {isBook && guide.book && <div className="bk">Book {guide.book}</div>}
-        {!isBook && !guide.image && <div className="bk">MeanderNY Field Guide</div>}
+        {!isBook && !guide.image && (guide.label ?? "MeanderNY Field Guide") && (
+          <div className="bk">{guide.label ?? "MeanderNY Field Guide"}</div>
+        )}
         <h3>{guide.title}</h3>
         {isBook && r ? (
           <ul className="card-facts">
@@ -538,7 +602,10 @@ function HomeView() {
   const seriesKeys = Object.keys(SERIES).filter((k) => GUIDES.some((g) => g.series === k));
   const allSeries = seriesKeys.map(seriesData);
   const featured = allSeries.find((s) => s.key === FEATURED_SERIES) || allSeries[0];
-  const moreGuides = GUIDES.filter((g) => !g.series && g.status === "available");
+  const moreGuides = GUIDES.filter(
+    (g) => !g.series && !g.section && g.status === "available"
+  );
+  const alsoBy = GUIDES.filter((g) => g.section === "also-by" && g.status === "available");
   const comingGuides = GUIDES.filter((g) => g.status === "coming-soon");
 
   return (
@@ -672,6 +739,21 @@ function HomeView() {
           {/* TODO: thumbnail row — drop a <div className="strip-thumbs"> of 3–5
               postcard/photo <img>s (lazy, with alt text) here once scans are ready. */}
         </section>
+
+        {/* other books by the author */}
+        {alsoBy.length > 0 && (
+          <section id="also-by" className="sec sec--tight also">
+            <div className="eyebrow eyebrow--neutral">Also by Devlin Foster</div>
+            <div className="grid">
+              {alsoBy.map((g) => (
+                <GuideCard key={g.id} guide={g} />
+              ))}
+            </div>
+            <a className="also-all" href={BN_AUTHOR_URL} target="_blank" rel="noopener">
+              All my books on Barnes &amp; Noble
+            </a>
+          </section>
+        )}
 
         {/* who makes these */}
         <section className="maker">
@@ -898,7 +980,15 @@ html{ scroll-behavior:smooth; }
 .card-blurb{ margin:0 0 1.1rem; font-size:.95rem; color:var(--muted); }
 .card-note{ margin:-.6rem 0 1.1rem; font-size:.82rem; font-style:italic; color:var(--muted); }
 .card-body{ display:flex; flex-direction:column; }
-.card-foot{ margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.card-foot{ margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+.card-foot .btn:only-child{ margin-left:auto; }
+.also .card{ box-shadow:none; border-top-width:1px; background:transparent; padding:16px 18px; }
+.also .card h3{ font-size:1rem; }
+.also .btn{ background:transparent; color:var(--ink) !important; border-color:var(--line); }
+.also .btn:hover{ border-color:var(--teal); }
+.also .grid{ margin-top:18px; }
+.also-all{ display:inline-flex; align-items:center; min-height:44px; margin-top:12px; font:700 .9rem/1.3 var(--head); color:var(--ink); text-underline-offset:4px; }
+.also-all:hover{ color:var(--teal); }
 .card-foot .btn{ padding:11px 18px; font-size:.85rem; }
 .card-links{ display:flex; flex-direction:column; margin-top:8px; }
 .card-link{ align-self:flex-start; display:inline-flex; align-items:center; min-height:44px; font-size:.92rem; line-height:1.3; text-underline-offset:3px; color:var(--ink); }

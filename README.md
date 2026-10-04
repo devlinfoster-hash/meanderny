@@ -83,6 +83,29 @@ store link is ready.
 }
 ```
 
+### A book on Barnes & Noble (or another store)
+
+Same as a guide outside a series, with the store link as `url`. Leave out `price`
+(B&N shows its own, and it can change) and the card shows only the button.
+
+```js
+{
+  id: "trails-that-say-yes",
+  title: "Trails That Say Yes",
+  label: "",                    // hide the "MeanderNY Field Guide" label
+  status: "available",
+  url: "https://www.barnesandnoble.com/w/...",
+  cta: BN_CTA,                  // "Get it on Barnes & Noble"
+  // subtitle, blurb, cover: optional; add them when you have them
+},
+```
+
+Add `section: "also-by"` to put a book in the lower-key **Also by Devlin Foster**
+section near the bottom instead of **More guides**. The "All my books on Barnes &
+Noble" link under that section is `BN_AUTHOR_URL` at the top of `src/App.jsx`.
+
+To add a cover later, save it in `public/covers/` and set `cover: "/covers/name.jpg"`.
+
 ### A new series
 
 Add an entry to `SERIES` (heading, route-strip copy, start/end labels, accent)

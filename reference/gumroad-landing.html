@@ -1,0 +1,286 @@
+<!doctype html>
+<!-- DESIGN REFERENCE ONLY. Covers are referenced as /covers/north.jpg, through.jpg, south.jpg (the real file embeds them as base64). Reuse the CSS variables, fonts, buttons, cards and light/dark mode. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>MeanderNY — Long Path Camping Guides</title>
+<meta name="description" content="Field guides to legal backcountry camping on the Long Path, from Manhattan to Altamont: where you can sleep, where the water is, and how to plan it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,500&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f6f1e4; --bg2:#ece5d2; --card:#fffdf6; --ink:#0c2a30; --muted:#4b6366; --line:#d9d0b8;
+  --teal:#0b7f7a; --amber:#b9690c; --blue:#2563c9; --accent:#0b7f7a; --btn:#0c2a30; --btnink:#f6f1e4;
+  --shadow:0 10px 30px rgba(12,42,48,.12);
+  --head:"Poppins","Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+  --serif:"Lora",Georgia,"Times New Roman",serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --c1:url("/covers/north.jpg"); --c2:url("/covers/through.jpg"); --c3:url("/covers/south.jpg");
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#071417; --bg2:#0b1f24; --card:#0e262c; --ink:#f4efe0; --muted:#a9bfc0; --line:#1c3a40;
+    --teal:#2de0d2; --amber:#f2a93b; --blue:#58a4ff; --accent:#2de0d2; --btn:#2de0d2; --btnink:#06191c;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-text-size-adjust:100%}
+a{color:inherit}
+.wrap{width:min(1100px,100% - 40px);margin-inline:auto}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+.eyebrow{font:700 .78rem/1 var(--head);letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+
+/* top bar */
+.top{border-bottom:1px solid var(--line);background:var(--bg2)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0}
+.mark{font:800 1.15rem/1 var(--head);letter-spacing:.12em;text-decoration:none}
+.mark b{color:var(--accent);font-weight:800}
+.top small{font:600 .72rem/1.2 var(--head);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:right}
+
+/* hero */
+.hero{padding:clamp(40px,7vw,88px) 0 clamp(36px,6vw,72px);background:
+  radial-gradient(900px 400px at 85% 0%,color-mix(in srgb,var(--accent) 16%,transparent),transparent 70%),var(--bg)}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(24px,5vw,64px);align-items:center}
+h1{font:800 clamp(2rem,5.2vw,3.6rem)/1.08 var(--head);margin:.5rem 0 1rem;letter-spacing:-.01em}
+h1 em{font:italic 500 1em/1 var(--serif);color:var(--accent)}
+.lede{font-size:clamp(1.05rem,1.8vw,1.25rem);color:var(--muted);max-width:34em;margin:0 0 1.6rem}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;padding:14px 22px;border-radius:999px;font:700 .95rem/1 var(--head);text-decoration:none;background:var(--btn);color:var(--btnink);border:2px solid var(--btn);transition:transform .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--accent)}
+.fan{position:relative;height:clamp(300px,42vw,470px)}
+.fan .cv{position:absolute;width:44%;aspect-ratio:5/8;border-radius:8px;background-size:cover;background-position:center;box-shadow:var(--shadow);border:1px solid var(--line)}
+.fan .a{left:2%;top:9%;background-image:var(--c1);transform:rotate(-7deg)}
+.fan .b{left:28%;top:0;background-image:var(--c2);transform:rotate(1deg);z-index:2}
+.fan .c{right:2%;top:11%;background-image:var(--c3);transform:rotate(8deg)}
+
+/* route strip */
+.route{padding:clamp(28px,5vw,56px) 0;background:var(--bg2);border-block:1px solid var(--line)}
+.route h2,.sec h2{font:800 clamp(1.4rem,3vw,2rem)/1.15 var(--head);margin:.4rem 0 .5rem}
+.route p.sub{margin:0 0 1.4rem;color:var(--muted);max-width:40em}
+.bar{display:flex;height:16px;border-radius:999px;overflow:hidden;gap:3px}
+.bar i{display:block}
+.bar .s{flex:164;background:var(--blue)}.bar .m{flex:116;background:var(--amber)}.bar .n{flex:78;background:var(--teal)}
+.legs{display:flex;gap:3px;margin-top:10px;font:600 .8rem/1.3 var(--head)}
+.legs span{padding-inline:2px}
+.legs .s{flex:164;color:var(--blue)}.legs .m{flex:116;color:var(--amber)}.legs .n{flex:78;color:var(--teal)}
+.ends{display:flex;justify-content:space-between;margin-top:6px;font:600 .72rem/1 var(--head);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* sections */
+.sec{padding:clamp(40px,6vw,76px) 0}
+.sec .lead{color:var(--muted);max-width:40em;margin:0 0 2rem}
+
+/* bundle */
+.bundle{display:grid;grid-template-columns:auto 1fr;gap:clamp(18px,4vw,40px);align-items:center;background:var(--card);border:2px solid var(--accent);border-radius:20px;padding:clamp(18px,3.5vw,34px);box-shadow:var(--shadow)}
+.minifan{position:relative;width:clamp(150px,22vw,230px);aspect-ratio:1/0.82}
+.minifan .cv{position:absolute;bottom:0;width:46%;aspect-ratio:5/8;border-radius:6px;background-size:cover;border:1px solid var(--line);box-shadow:var(--shadow)}
+.minifan .a{left:0;background-image:var(--c1);transform:rotate(-6deg)}
+.minifan .b{left:27%;background-image:var(--c2);z-index:2;bottom:6%}
+.minifan .c{right:0;background-image:var(--c3);transform:rotate(6deg)}
+.bundle h3{font:800 clamp(1.25rem,2.6vw,1.7rem)/1.2 var(--head);margin:.3rem 0 .5rem}
+.bundle p{margin:0 0 1rem;color:var(--muted)}
+.price{font:800 1.5rem/1 var(--head)}
+.price s{font-weight:600;font-size:1rem;color:var(--muted);margin-left:8px}
+.badge{display:inline-block;font:700 .72rem/1 var(--head);letter-spacing:.14em;text-transform:uppercase;background:var(--accent);color:var(--btnink);padding:6px 10px;border-radius:999px}
+
+/* guide cards */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
+.card{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:16px;padding:20px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.card.n{--accent:var(--teal)}.card.m{--accent:var(--amber)}.card.s{--accent:var(--blue)}
+.card .cv{width:62%;margin:0 auto 16px;aspect-ratio:5/8;border-radius:8px;background-size:cover;border:1px solid var(--line);box-shadow:var(--shadow)}
+.card.n .cv{background-image:var(--c1)}.card.m .cv{background-image:var(--c2)}.card.s .cv{background-image:var(--c3)}
+.card .bk{font:700 .72rem/1 var(--head);letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+.card h3{font:700 1.15rem/1.25 var(--head);margin:.5rem 0}
+.card ul{list-style:none;margin:0 0 .9rem;padding:0;font-size:.92rem;color:var(--muted)}
+.card li{padding:.15rem 0}
+.card li b{color:var(--ink);font-weight:600}
+.card p{margin:0 0 1.1rem;font-size:.95rem;color:var(--muted)}
+.card .foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card .foot .btn{padding:11px 18px;font-size:.85rem}
+
+/* what's inside */
+.inside{background:var(--bg2);border-block:1px solid var(--line)}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 28px}
+.feat div{padding-top:14px;border-top:3px solid var(--accent)}
+.feat h4{font:700 1rem/1.3 var(--head);margin:0 0 .35rem}
+.feat p{margin:0;color:var(--muted);font-size:.95rem}
+
+/* notes + footer */
+.notes{max-width:46em;color:var(--muted);font-size:.95rem}
+.notes li{margin:.4rem 0}
+footer{border-top:1px solid var(--line);background:var(--bg2);padding:26px 0 34px;color:var(--muted);font-size:.85rem}
+footer .row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px}
+footer a{color:var(--ink);text-underline-offset:3px}
+
+@media (max-width:900px){
+  .hero .wrap{grid-template-columns:1fr}
+  .fan{max-width:520px;width:100%;margin-inline:auto}
+  .grid,.feat{grid-template-columns:1fr}
+  .card{flex-direction:row;flex-wrap:wrap;gap:0 18px}
+  .card .cv{width:34%;margin:0 0 14px;flex:none}
+  .card .body{flex:1 1 55%}
+  .card .foot{flex:1 1 100%}
+}
+@media (max-width:640px){
+  .top small{display:none}
+  .bundle{grid-template-columns:1fr;text-align:center}
+  .minifan{margin-inline:auto}
+  .cta .btn{width:100%;text-align:center}
+  .legs{font-size:.7rem}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="https://meanderny.com">MEANDER<b>NY</b></a>
+    <small>Catskill Meandering Field Guides</small>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">The Long Path series</div>
+      <h1>Where can you <em>legally</em> sleep on the Long Path?</h1>
+      <p class="lede">Most of the Long Path is road walks and parkland where camping is prohibited. These three guides show the legal exceptions, from Manhattan to Altamont: the camps, the water, the rules and ready-made plans.</p>
+      <div class="cta">
+        <a class="btn" href="https://devlinfoster.gumroad.com/l/long-path-bundle">Get the complete series</a>
+        <a class="btn ghost" href="#guides">Browse the guides</a>
+      </div>
+    </div>
+    <div class="fan" role="img" aria-label="Covers of the three Long Path guides: North, Through and South of the Catskills">
+      <div class="cv a"></div><div class="cv b"></div><div class="cv c"></div>
+    </div>
+  </div>
+</section>
+
+<section class="route" aria-labelledby="route-h">
+  <div class="wrap">
+    <div class="eyebrow">One trail, three books</div>
+    <h2 id="route-h">Manhattan to Altamont, in order</h2>
+    <p class="sub">Each guide picks up where the last one ends, so you can plan a weekend, a section, or the whole way through.</p>
+    <div class="bar" aria-hidden="true"><i class="s"></i><i class="m"></i><i class="n"></i></div>
+    <div class="legs">
+      <span class="s">South · §1–15</span><span class="m">Through · §16–28</span><span class="n">North · §29–35</span>
+    </div>
+    <div class="ends"><span>Washington Heights</span><span>Altamont</span></div>
+  </div>
+</section>
+
+<section class="sec" id="bundle">
+  <div class="wrap">
+    <div class="bundle">
+      <div class="minifan" role="img" aria-label="The three guide covers together"><div class="cv a"></div><div class="cv b"></div><div class="cv c"></div></div>
+      <div>
+        <span class="badge">Best value</span>
+        <h3>The Complete 3-Guide Series</h3>
+        <p>All three guides in one download, as PDF and EPUB, covering Sections 1–35 plus a bonus chapter on Sections 36–40 toward the Northville-Placid Trail.</p>
+        <p class="price">$19.99 <s>$24.97 separately</s></p>
+        <a class="btn" href="https://devlinfoster.gumroad.com/l/long-path-bundle">See the bundle</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="guides" style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">Or buy one at a time</div>
+    <h2>The guides</h2>
+    <p class="lead">Free &amp; Legal Backcountry Camping, one guide for each stretch of the trail.</p>
+    <div class="grid">
+
+      <article class="card n">
+        <div class="cv" role="img" aria-label="Cover: North of the Catskills"></div>
+        <div class="body">
+          <div class="bk">Book 1</div>
+          <h3>North of the Catskills</h3>
+          <ul>
+            <li><b>Gilboa to Altamont</b> · Sections 29–35</li>
+            <li>About <b>78 miles</b></li>
+          </ul>
+          <p>Seven state-forest camps, the Helderberg finish, and a bonus chapter beyond Altamont.</p>
+        </div>
+        <div class="foot"><span class="price">$6.99</span><a class="btn" href="https://devlinfoster.gumroad.com/l/long-path-north">View guide</a></div>
+      </article>
+
+      <article class="card m">
+        <div class="cv" role="img" aria-label="Cover: Through the Catskills"></div>
+        <div class="body">
+          <div class="bk">Book 2</div>
+          <h3>Through the Catskills</h3>
+          <ul>
+            <li><b>Riggsville to West Conesville</b> · Sections 16–28</li>
+            <li>About <b>116 miles</b></li>
+          </ul>
+          <p>Lean-tos, the Peekamoose permit zone, and plans for the high peaks.</p>
+        </div>
+        <div class="foot"><span class="price">$8.99</span><a class="btn" href="https://devlinfoster.gumroad.com/l/long-path-catskills">View guide</a></div>
+      </article>
+
+      <article class="card s">
+        <div class="cv" role="img" aria-label="Cover: South of the Catskills"></div>
+        <div class="body">
+          <div class="bk">Book 3</div>
+          <h3>South of the Catskills</h3>
+          <ul>
+            <li><b>Manhattan to Riggsville</b> · Sections 1–15</li>
+            <li>About <b>164 miles</b> official, 171 camper's route</li>
+          </ul>
+          <p>Shelters, parks and DEC land, two routes, and a bus-assisted start.</p>
+        </div>
+        <div class="foot"><span class="price">$8.99</span><a class="btn" href="https://devlinfoster.gumroad.com/l/long-path-south">View guide</a></div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="sec inside">
+  <div class="wrap">
+    <div class="eyebrow">In every guide</div>
+    <h2>Built to answer one question</h2>
+    <p class="lead"><em style="font-family:var(--serif)">“Where am I actually allowed to sleep tonight, and where’s the water?”</em></p>
+    <div class="feat">
+      <div><h4>Camp cards</h4><p>Coordinates, water, parking and a link to the official map for every legal camp.</p></div>
+      <div><h4>Ready-made plans</h4><p>Day-by-day itineraries, each night at a named camp with a named water source.</p></div>
+      <div><h4>Water ratings</h4><p>Every source rated reliable, seasonal, or “don’t count on it.”</p></div>
+      <div><h4>Rules, plainly</h4><p>The 150-foot rule, shelter and permit rules, closures and hunting seasons.</p></div>
+      <div><h4>Resupply &amp; a hot meal</h4><p>Where to buy food, where to sleep indoors, and where the gaps are.</p></div>
+      <div><h4>Map pages</h4><p>Overview, detail maps and elevation profiles, with links to the official maps.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <h2>Good to know</h2>
+    <ul class="notes">
+      <li>These are unofficial companion guides, not affiliated with or endorsed by the NY–NJ Trail Conference or any state agency.</li>
+      <li>Use them alongside the Trail Conference’s route guide, which is the authoritative route description.</li>
+      <li>Rules, closures and permits change. Confirm each park or forest before you go.</li>
+      <li>Digital downloads: PDF and EPUB. All sales are final.</li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap row">
+    <span>© 2026 Devlin Foster · MeanderNY · New York’s Upper Hudson Valley</span>
+    <a href="https://meanderny.com">meanderny.com</a>
+  </div>
+</footer>
+
+</body>
+</html>

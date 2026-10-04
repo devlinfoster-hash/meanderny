@@ -7,7 +7,7 @@ const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
 )}`;
 
 /* The Long Path North Gumroad listing — reused by the card and the hero CTA. */
-const LONGPATH_NORTH_URL = "https://devlinfoster.gumroad.com/l/longpath-camping";
+const LONGPATH_NORTH_URL = "https://devlinfoster.gumroad.com/l/long-path-north";
 
 /* Set document title, meta description, and canonical URL for a client-rendered
    route. Returns a cleanup that restores the previous values. */

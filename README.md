@@ -24,35 +24,77 @@ npm run build      # production build into /dist
    `meanderny.com`. Follow Vercel's DNS instructions at Namecheap (either point
    the nameservers to Vercel, or add the A / CNAME records Vercel gives you).
 
-No `vercel.json` is needed — this is a single page with no client-side routing,
-so Vercel's default static serving works as-is.
+`vercel.json` sends every URL to the app, except `/journal/<slug>`, which serves the
+static article at `public/journal/<slug>/index.html`.
 
 ## Add a guide (the only edit you'll usually make)
 
-Open `src/App.jsx` and add one object to the `GUIDES` array at the top:
+Everything on the homepage is drawn from the `GUIDES` list at the top of
+`src/App.jsx`: the series cards, the route strip, the bundle box, the hero cover
+fan and "More guides". You never touch the layout.
+
+### A new Long Path book = one entry + one cover
+
+1. Save the cover as an 800×1280 JPG in `public/covers/`, e.g. `public/covers/adirondacks.jpg`.
+2. Add one object to `GUIDES`:
+
+```js
+{
+  id: "long-path-adirondacks",
+  series: "long-path",          // puts it in the Long Path section
+  book: 4,                      // "Book 4" label; cards are ordered by this
+  short: "Adirondacks",         // label in the route strip
+  title: "Toward the Adirondacks",
+  subtitle: "Altamont to Northville",           // "From to To"
+  route: { sections: [36, 40], miles: 60 },     // strip order + segment width
+  blurb: "One sentence on what's inside.",
+  price: 8.99,
+  accent: "rust",               // teal | amber | blue | rust | green
+  cover: "/covers/adirondacks.jpg",
+  cta: "View guide",
+  status: "available",          // or "coming-soon" (shows as a row, no link)
+  url: "https://devlinfoster.gumroad.com/l/your-slug",
+},
+```
+
+3. Commit and push. The card, the route-strip segment and the bundle's
+   "$xx.xx separately" total update by themselves.
+
+The bundle entry (`kind: "bundle"`) keeps its own title and blurb ("The Complete
+3-Guide Series", "All three guides…"), so edit that copy when the bundle's
+contents change.
+
+### A guide outside a series
+
+Leave out `series`, `book`, `short` and `route`. It appears under **More
+guides** with the neutral accent. `cover` is optional there.
 
 ```js
 {
   id: "ny-firetowers",
   title: "NY Firetowers",
-  region: "Statewide · the towers worth the climb",
+  subtitle: "Statewide · the towers worth the climb",
   blurb: "One sentence on what's inside.",
-  price: 9,                 // only shown when status is "available"
-  status: "available",      // or "coming-soon"
+  price: 9,
+  status: "available",
   url: "https://devlinfoster.gumroad.com/l/your-slug",
-  cover: null,              // optional image URL; null = rendered green panel
 }
 ```
 
-- `status: "coming-soon"` shows a muted card with a "Coming soon" corner flag and
-  no link — good for showing the roadmap without a broken button.
-- `cover` is optional. Leave it `null` and the card draws its own branded cover
-  panel from the title/region. Set it to an image URL (e.g. a Gumroad cover PNG)
-  to use real art instead.
+### A new series
 
-Commit, push, and Vercel redeploys.
+Add an entry to `SERIES` (heading, route-strip copy, start/end labels, accent)
+and use its key as `series` on the books. It gets its own section automatically.
 
-## Brand tokens (kept in sync with the guide covers)
+## Design tokens
 
-Greens `#33452f` / `#445c3c`, gold `#c2872f`, rust `#a8531e`, paper `#f5efe1`.
-Headings & body: **Lora**. Labels/buttons: **Barlow Condensed**.
+Matches the Gumroad landing page (`reference/gumroad-landing.html`, a design
+reference only; not served). Light and dark follow the device setting.
+
+- Light: background `#f6f1e4` / `#ece5d2`, cards `#fffdf6`, ink `#0c2a30`, muted `#4b6366`, lines `#d9d0b8`.
+- Dark: background `#071417` / `#0b1f24`, cards `#0e262c`, ink `#f4efe0`, muted `#a9bfc0`, lines `#1c3a40`.
+- Book accents: Book 1 teal `#0b7f7a` / `#2de0d2`, Book 2 amber `#b9690c` / `#f2a93b`,
+  Book 3 blue `#2563c9` / `#58a4ff`. Spares for new books: rust, green. Guides outside a
+  series use neutral.
+- Type: headings, labels and buttons in **Poppins**; accent words in **Lora** italic;
+  body text in the system sans-serif.

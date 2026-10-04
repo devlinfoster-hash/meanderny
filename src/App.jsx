@@ -6,9 +6,6 @@ const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
   "MeanderNY correction"
 )}`;
 
-/* The Long Path North Gumroad listing — reused by the card and the hero CTA. */
-const LONGPATH_NORTH_URL = "https://devlinfoster.gumroad.com/l/long-path-north";
-
 /* Set document title, meta description, and canonical URL for a client-rendered
    route. Returns a cleanup that restores the previous values. */
 function setDocumentHead({ title, description, canonical }) {
@@ -31,121 +28,187 @@ function setDocumentHead({ title, description, canonical }) {
 }
 
 /* ============================================================================
-   THE ONLY THING YOU EDIT TO ADD A GUIDE
+   SERIES — one entry per book series. The homepage draws a section for each
+   series that has guides in GUIDES: the route strip, the featured bundle and
+   the book cards. Text here is the series' own copy; everything about the
+   individual books comes from GUIDES.
+     name       eyebrow above the series (also the hero eyebrow)
+     heading    route-strip heading
+     sub        route-strip sentence
+     lead       sentence above the book cards
+     start/end  labels under the two ends of the route strip
+     accent     colour of the series bundle (see ACCENTS below)
+   ========================================================================== */
+const SERIES = {
+  "long-path": {
+    name: "The Long Path series",
+    heading: "Manhattan to Altamont, in order",
+    sub: "Each guide picks up where the last one ends, so you can plan a weekend, a section, or the whole way through.",
+    lead: "Free & Legal Backcountry Camping, one guide for each stretch of the trail.",
+    start: "Washington Heights",
+    end: "Altamont",
+    accent: "teal",
+  },
+};
+
+/* The series the hero features (its cover fan and "Get the complete series"). */
+const FEATURED_SERIES = "long-path";
+
+/* ============================================================================
+   GUIDES — THE ONLY THING YOU EDIT TO ADD A GUIDE
    ----------------------------------------------------------------------------
-   Add a guide = add one object to this array. The page maps over it.
-   Available guides render as cards (in array order); coming-soon guides render
-   as compact rows in the "Coming soon" section (also in array order).
+   Add a guide = add one object here (and, for a book, one cover image in
+   public/covers/). The layout reads everything from this list. See the README,
+   "Add a guide", for a copy-paste template.
+
    Fields:
-     id        unique string (used as the React key)
-     title     guide name (shown big on the card cover)
-     region    one-line subtitle under the title on the cover
-     blurb     one sentence of what's inside (shown in the card body)
-     note      OPTIONAL small line under the blurb (e.g. edition / date checked)
-     price     number, in dollars (only shown when status === "available")
-     status    "available"  -> shows price + "Get the guide" button
-               "coming-soon" -> listed as a compact row, no link
-     url        the Gumroad product URL (only used when available)
-     cover      OPTIONAL full-bleed image URL for the card header tile.
-     coverImage OPTIONAL { src, srcSet, alt } portrait book cover shown on the
-                right of the dark header tile (title/subtitle stay on the left).
-     links      OPTIONAL array of { label, url } secondary links under the buy row
+     id         unique string
+     title      guide name
+     subtitle   one line under the title (for a series book: "From to To")
+     blurb      one sentence of what's inside
+     price      number in dollars; priceLabel (optional) replaces it, e.g. "Free download"
+     url        the Gumroad product URL
+     status     "available" -> card with price + button
+                "coming-soon" -> compact row in "Coming soon", no link
+     cover      OPTIONAL portrait cover, 800x1280 jpg in public/covers/
+     accent     colour: "teal" | "amber" | "blue" | "rust" | "green" | "neutral"
+                (series books only; guides outside a series are always neutral)
+     cta        OPTIONAL button text (default "Get the guide")
+     note       OPTIONAL small line under the blurb
+     links      OPTIONAL [{ label, url }] secondary links under the button
+
+   Series books (in the series section, cards ordered by `book`):
+     series     key into SERIES, e.g. "long-path"
+     book       book number -> "Book 1" label and card order
+     short      short name for the route strip, e.g. "North"
+     route      { sections: [first, last], miles, milesNote? }
+                The route strip is ordered by first section; segment width = miles.
+
+   A series bundle (one per series, shown as the featured box):
+     kind: "bundle", series, title, blurb, price, url, badge, cta
+     "$xx.xx separately" is added up automatically from the series' books.
+
+   Guides without `series` go in "More guides".
    ========================================================================== */
 const GUIDES = [
   {
-    id: "longpath-north",
-    title: "Long Path North",
-    region: "Schoharie Hills & Helderbergs · Sec 29–35",
+    id: "long-path-bundle",
+    kind: "bundle",
+    series: "long-path",
+    title: "The Complete 3-Guide Series",
     blurb:
-      "Seven New York state forests where you can legally pitch a tent, with rated water sources, day-by-day itineraries, resupply stops, fire rules in plain English, and a bonus offline DEC map pack.",
-    note: "First Edition · checked through September 2026",
-    price: 11.99,
+      "All three guides in one download, as PDF and EPUB, covering Sections 1–35 plus a bonus chapter on Sections 36–40 toward the Northville-Placid Trail.",
+    price: 19.99,
+    badge: "Best value",
+    cta: "See the bundle",
     status: "available",
-    url: LONGPATH_NORTH_URL,
-    cover: null,
-    coverImage: {
-      src: "/long-path-north-cover-400.jpg",
-      srcSet:
-        "/long-path-north-cover-400.jpg 1x, /long-path-north-cover-800.jpg 2x",
-      alt: "Cover of Free & Legal Backcountry Camping North of the Catskills",
-    },
-    links: [
-      {
-        label: "Free companion page (Mohawk Valley Almanac)",
-        url: "https://www.mohawkvalleyalmanac.com/backcountry-camping",
-      },
-    ],
+    url: "https://devlinfoster.gumroad.com/l/long-path-bundle",
+  },
+  {
+    id: "long-path-north",
+    series: "long-path",
+    book: 1,
+    short: "North",
+    title: "North of the Catskills",
+    subtitle: "Gilboa to Altamont",
+    route: { sections: [29, 35], miles: 78 },
+    blurb:
+      "Seven state-forest camps, the Helderberg finish, and a bonus chapter beyond Altamont.",
+    price: 6.99,
+    accent: "teal",
+    cover: "/covers/north.jpg",
+    cta: "View guide",
+    status: "available",
+    url: "https://devlinfoster.gumroad.com/l/long-path-north",
+  },
+  {
+    id: "long-path-catskills",
+    series: "long-path",
+    book: 2,
+    short: "Through",
+    title: "Through the Catskills",
+    subtitle: "Riggsville to West Conesville",
+    route: { sections: [16, 28], miles: 116 },
+    blurb: "Lean-tos, the Peekamoose permit zone, and plans for the high peaks.",
+    price: 8.99,
+    accent: "amber",
+    cover: "/covers/through.jpg",
+    cta: "View guide",
+    status: "available",
+    url: "https://devlinfoster.gumroad.com/l/long-path-catskills",
+  },
+  {
+    id: "long-path-south",
+    series: "long-path",
+    book: 3,
+    short: "South",
+    title: "South of the Catskills",
+    subtitle: "Manhattan to Riggsville",
+    route: { sections: [1, 15], miles: 164, milesNote: "official, 171 camper's route" },
+    blurb: "Shelters, parks and DEC land, two routes, and a bus-assisted start.",
+    price: 8.99,
+    accent: "blue",
+    cover: "/covers/south.jpg",
+    cta: "View guide",
+    status: "available",
+    url: "https://devlinfoster.gumroad.com/l/long-path-south",
   },
   {
     id: "catskills-fire-towers",
     title: "Catskills Fire Tower Challenge",
-    region: "Catskill Park · the patch, done right",
+    subtitle: "Catskill Park · the patch, done right",
     blurb:
       "The completion kit for the DEC's eight-tower challenge — best routes, parking, drive-times between towers, a printable log, and an offline map pack. Built to earn the patch without wasting a Saturday.",
     price: 11.99,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskills-fire-towers",
-    cover: null,
   },
   {
     id: "rambles-1863",
     title: "Guide to Rambles from the Catskill Mountain House",
-    region: "The Catskills · Written 1863, walked today",
+    subtitle: "The Catskills · Written 1863, walked today",
     blurb:
       "The complete 1863 trail guide — reproduced in full — with a then-and-now walking companion and an illustrated four-station map. Free to read.",
     price: 0,
     priceLabel: "Free download",
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/rambles-1863",
-    cover: null,
-  },
-  {
-    id: "longpath-catskills",
-    title: "Long Path Catskills",
-    region: "Catskill Forest Preserve · the southern companion",
-    blurb:
-      "The southern half of the trail, inside the blue line — legal sites, the lean-to system, and the rules that change the moment you enter the Forest Preserve.",
-    price: 9,
-    status: "coming-soon",
-    url: "",
-    cover: null,
   },
   {
     id: "catskill-waterfalls",
     title: "Catskill Waterfalls",
-    region: "Catskill Park · find them, reach them, safely",
+    subtitle: "Catskill Park · find them, reach them, safely",
     blurb:
       "The falls worth chasing — where to actually park, how to reach each one legally, which are family-easy, and which have hurt people. Access and honest safety beta, not a scenery list.",
     price: null,
     status: "coming-soon",
     url: "",
-    cover: null,
   },
 ];
 
 /* ============================================================================
    RESTORED ANTIQUE MAPS
    ----------------------------------------------------------------------------
-   Same shape as GUIDES (see above). Each entry is one historical Catskill map,
+   Same card as GUIDES (see above). Each entry is one historical Catskill map,
    carefully restored and offered as a high-resolution download on Gumroad.
-   Image fields: cover (URL), coverAlt, coverW/coverH (intrinsic px, to reserve
+   Image fields: image (URL), imageAlt, imageW/imageH (intrinsic px, to reserve
    space and avoid layout shift).
    ========================================================================== */
 const MAPS = [
   {
     id: "catskill-1879",
     title: "Catskill Mountains, 1879",
-    region: "Restored antique survey · drawn 1879",
+    subtitle: "Restored antique survey · drawn 1879",
     blurb:
       "Walton Van Loan's earliest survey — the Catskill Mountain House alone, before the grand hotels multiplied. North & South Lake, Kaaterskill Falls, and the cliff-edge escarpment ledges. Restored in three editions: color, green, and black & white.",
     price: 11.99,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskill-1879",
-    cover: "/map-1879-card.jpg",
-    coverAlt:
+    image: "/map-1879-card.jpg",
+    imageAlt:
       "Detail of Walton Van Loan's 1879 map showing North and South Lakes, the Catskill Mountain House and South Mountain",
-    coverW: 1200,
-    coverH: 800,
+    imageW: 1200,
+    imageH: 800,
     cta: "Get the Map",
     links: [
       {
@@ -157,18 +220,18 @@ const MAPS = [
   {
     id: "catskill-1882",
     title: "Catskill Mountains, 1882",
-    region: "Restored antique survey · drawn 1882",
+    subtitle: "Restored antique survey · drawn 1882",
     blurb:
       "Van Loan's updated map — now adding the brand-new Hotel Kaaterskill and Laurel House. The same Catskill country three years later, with a grand hotel that had just been built. Restored in three editions, fully sourced from the Library of Congress.",
     price: 11.99,
     status: "available",
     url: "https://devlinfoster.gumroad.com/l/catskill-1882",
     domId: "framed-1882",
-    cover: "/map-1882-card.jpg",
-    coverAlt:
+    image: "/map-1882-card.jpg",
+    imageAlt:
       "Detail of Walton Van Loan's 1882 map showing North and South Lakes, Kaaterskill Mountain and the escarpment",
-    coverW: 1200,
-    coverH: 800,
+    imageW: 1200,
+    imageH: 800,
     cta: "Get the Map",
     links: [
       {
@@ -183,150 +246,210 @@ const MAPS = [
   },
 ];
 
-/* --- reusable brand artwork ------------------------------------------------ */
+/* --- derived lists (layout reads these; edit GUIDES, not these) ------------ */
 
-function Topo({ className }) {
-  // faint contour-line texture; color is set via CSS `color` (currentColor)
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 800 600"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-    >
-      <g fill="none" stroke="currentColor" strokeWidth="1.2">
-        {Array.from({ length: 12 }).map((_, i) => (
-          <path
-            key={i}
-            d={`M-20,${70 + i * 50} C 180,${20 + i * 50} 360,${150 + i * 50} 560,${
-              80 + i * 50
-            } S 900,${10 + i * 50} 980,${120 + i * 50}`}
-          />
-        ))}
-      </g>
-    </svg>
-  );
+const NUMBER_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+const numberWord = (n) => NUMBER_WORDS[n] ?? String(n);
+
+const formatPrice = (p) => `$${Number.isInteger(p) ? p : p.toFixed(2)}`;
+
+function seriesData(key) {
+  const books = GUIDES.filter(
+    (g) => g.series === key && g.kind !== "bundle" && g.status === "available"
+  ).sort((a, b) => a.book - b.book);
+  const bundle = GUIDES.find((g) => g.series === key && g.kind === "bundle");
+  const alongTrail = books
+    .filter((b) => b.route)
+    .sort((a, b) => a.route.sections[0] - b.route.sections[0]);
+  // sum in cents so 6.99 + 8.99 + 8.99 is exactly 24.97
+  const separately = books.reduce((sum, b) => sum + Math.round(b.price * 100), 0) / 100;
+  return { key, ...SERIES[key], books, bundle, alongTrail, separately };
 }
 
-function RouteMotif({ className }) {
-  // the wandering trail line with trailhead/summit pins
-  return (
-    <svg className={className} viewBox="0 0 220 64" aria-hidden="true">
-      <polyline
-        points="10,52 50,38 86,42 120,18 156,26 210,10"
-        fill="none"
-        stroke="var(--gold)"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="10" cy="52" r="5.5" fill="var(--rust)" stroke="var(--paper)" strokeWidth="1.8" />
-      <circle cx="50" cy="38" r="4.4" fill="var(--green2)" stroke="var(--paper)" strokeWidth="1.6" />
-      <circle cx="86" cy="42" r="4.4" fill="var(--green2)" stroke="var(--paper)" strokeWidth="1.6" />
-      <circle cx="120" cy="18" r="4.4" fill="var(--green2)" stroke="var(--paper)" strokeWidth="1.6" />
-      <circle cx="156" cy="26" r="4.4" fill="var(--green2)" stroke="var(--paper)" strokeWidth="1.6" />
-      <circle cx="210" cy="10" r="5.5" fill="var(--gold)" stroke="var(--paper)" strokeWidth="1.8" />
-    </svg>
-  );
+const accentVar = (accent) => ({ "--accent": `var(--${accent || "neutral"})` });
+
+const coverAlt = (g) => `Cover: ${g.title}`;
+
+function listTitles(books) {
+  const t = books.map((b) => b.title);
+  return t.length > 1 ? `${t.slice(0, -1).join(", ")} and ${t[t.length - 1]}` : t[0] || "";
 }
 
-function GuideCover({ guide }) {
-  // Book-cover tile: dark panel with title/subtitle on the left and the real
-  // portrait cover (with a soft shadow) on the right.
-  if (guide.coverImage) {
-    return (
-      <div className={`cover cover--book ${guide.status}`}>
-        <Topo className="cover-topo" />
-        <div className="cover-vig" />
-        <div className="cover-inner cover-inner--book">
-          <span className="cover-eyebrow">MeanderNY Field Guide</span>
-          <h3 className="cover-title">{guide.title}</h3>
-          <span className="cover-region">{guide.region}</span>
-        </div>
-        <img
-          className="cover-book"
-          src={guide.coverImage.src}
-          srcSet={guide.coverImage.srcSet}
-          sizes="190px"
-          width="119"
-          height="190"
-          loading="lazy"
-          alt={guide.coverImage.alt}
-        />
-        {guide.status === "coming-soon" && <span className="cover-flag">Coming soon</span>}
-      </div>
-    );
-  }
-  // Full-bleed photo tile (restored maps).
-  if (guide.cover) {
-    return (
-      <div className={`cover has-img ${guide.status}`}>
-        <img
-          src={guide.cover}
-          alt={guide.coverAlt || `${guide.title} cover`}
-          width={guide.coverW}
-          height={guide.coverH}
-          loading="lazy"
-        />
-        {guide.status === "coming-soon" && <span className="cover-flag">Coming soon</span>}
-      </div>
-    );
-  }
-  // Rendered panel with the route line-graph (guides without cover art yet).
+/* --- pieces ---------------------------------------------------------------- */
+
+function CoverFan({ books, className, label }) {
+  // up to three covers, fanned; the middle one sits on top
+  const shown = books.filter((b) => b.cover).slice(0, 3);
+  if (shown.length === 0) return null;
   return (
-    <div className={`cover ${guide.status}`}>
-      <Topo className="cover-topo" />
-      <div className="cover-vig" />
-      <div className="cover-inner">
-        <span className="cover-eyebrow">MeanderNY Field Guide</span>
-        <RouteMotif className="cover-route" />
-        <h3 className="cover-title">{guide.title}</h3>
-        <span className="cover-region">{guide.region}</span>
-      </div>
-      {guide.status === "coming-soon" && <span className="cover-flag">Coming soon</span>}
+    <div className={`fan ${className || ""}`} role="img" aria-label={label}>
+      {shown.map((b, i) => (
+        <img
+          key={b.id}
+          className={`fan-cv fan-cv--${["a", "b", "c"][i]}${shown.length === 1 ? " fan-cv--solo" : ""}`}
+          src={b.cover}
+          width="800"
+          height="1280"
+          alt=""
+          loading="eager"
+        />
+      ))}
     </div>
   );
 }
 
-function GuideCard({ guide, index }) {
-  const available = guide.status === "available";
+function Price({ guide }) {
   return (
-    <article id={guide.domId} className="card" style={{ animationDelay: `${index * 90}ms` }}>
-      <GuideCover guide={guide} />
+    <span className={guide.priceLabel ? "price price--label" : "price"}>
+      {guide.priceLabel ?? formatPrice(guide.price)}
+    </span>
+  );
+}
+
+function CardLinks({ links }) {
+  if (!links || links.length === 0) return null;
+  return (
+    <div className="card-links">
+      {links.map((link) => (
+        <a key={link.url} className="card-link" href={link.url} target="_blank" rel="noopener">
+          {link.label}
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function GuideCard({ guide }) {
+  const isBook = Boolean(guide.series);
+  const r = guide.route;
+  return (
+    <article
+      id={guide.domId}
+      className={`card${guide.cover ? " card--book" : ""}${guide.image ? " card--img" : ""}`}
+      style={accentVar(isBook ? guide.accent : "neutral")}
+    >
+      {guide.cover && (
+        <img
+          className="card-cv"
+          src={guide.cover}
+          width="800"
+          height="1280"
+          loading="lazy"
+          alt={coverAlt(guide)}
+        />
+      )}
+      {guide.image && (
+        <img
+          className="card-img"
+          src={guide.image}
+          width={guide.imageW}
+          height={guide.imageH}
+          loading="lazy"
+          alt={guide.imageAlt || `${guide.title} cover`}
+        />
+      )}
       <div className="card-body">
+        {isBook && guide.book && <div className="bk">Book {guide.book}</div>}
+        {!isBook && !guide.image && <div className="bk">MeanderNY Field Guide</div>}
+        <h3>{guide.title}</h3>
+        {isBook && r ? (
+          <ul className="card-facts">
+            <li>
+              <b>{guide.subtitle}</b> · Sections {r.sections[0]}–{r.sections[1]}
+            </li>
+            <li>
+              About <b>{r.miles} miles</b>
+              {r.milesNote ? ` ${r.milesNote}` : ""}
+            </li>
+          </ul>
+        ) : (
+          guide.subtitle && <p className="card-sub">{guide.subtitle}</p>
+        )}
         <p className="card-blurb">{guide.blurb}</p>
         {guide.note && <p className="card-note">{guide.note}</p>}
-        <div className="card-buy">
-          {available ? (
-            <>
-              <span className={guide.priceLabel ? "price price--label" : "price"}>
-                {guide.priceLabel ?? `$${guide.price}`}
-              </span>
-              <a className="btn" href={guide.url} target="_blank" rel="noopener noreferrer">
-                {guide.cta || "Get the guide"} <span className="arr">→</span>
-              </a>
-            </>
-          ) : (
-            <span className="soon">Coming soon</span>
-          )}
+      </div>
+      <div className="card-foot">
+        <Price guide={guide} />
+        <a className="btn" href={guide.url} target="_blank" rel="noopener noreferrer">
+          {guide.cta || "Get the guide"}
+        </a>
+      </div>
+      <CardLinks links={guide.links} />
+    </article>
+  );
+}
+
+function RouteStrip({ s }) {
+  if (s.alongTrail.length === 0) return null;
+  return (
+    <section className="route" aria-labelledby={`route-${s.key}`}>
+      <div className="wrap">
+        <div className="eyebrow">One trail, {numberWord(s.alongTrail.length)} books</div>
+        <h2 id={`route-${s.key}`}>{s.heading}</h2>
+        <p className="sub">{s.sub}</p>
+        <div className="bar" aria-hidden="true">
+          {s.alongTrail.map((b) => (
+            <i key={b.id} style={{ flex: b.route.miles, ...accentVar(b.accent) }} />
+          ))}
         </div>
-        {available && guide.links && guide.links.length > 0 && (
-          <div className="card-links">
-            {guide.links.map((link) => (
-              <a
-                key={link.url}
-                className="card-link"
-                href={link.url}
-                target="_blank"
-                rel="noopener"
-              >
-                {link.label}
-              </a>
+        <div className="legs">
+          {s.alongTrail.map((b) => (
+            <span key={b.id} style={{ flex: b.route.miles, ...accentVar(b.accent) }}>
+              {b.short} · §{b.route.sections[0]}–{b.route.sections[1]}
+            </span>
+          ))}
+        </div>
+        <div className="ends">
+          <span>{s.start}</span>
+          <span>{s.end}</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Bundle({ s }) {
+  const b = s.bundle;
+  if (!b || b.status !== "available") return null;
+  return (
+    <div className="bundle" style={accentVar(s.accent)}>
+      <CoverFan books={s.books} className="fan--mini" label={`The ${numberWord(s.books.length)} guide covers together`} />
+      <div>
+        {b.badge && <span className="badge">{b.badge}</span>}
+        <h3>{b.title}</h3>
+        <p>{b.blurb}</p>
+        <p className="price">
+          {formatPrice(b.price)}
+          {s.separately > b.price && <s>{formatPrice(s.separately)} separately</s>}
+        </p>
+        <a className="btn" href={b.url} target="_blank" rel="noopener noreferrer">
+          {b.cta || "See the bundle"}
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function SeriesSection({ s }) {
+  return (
+    <div className="series" id={s.key}>
+      <RouteStrip s={s} />
+      <section className="sec">
+        <div className="wrap">
+          <Bundle s={s} />
+          <div className="sec-head sec-head--after">
+            <div className="eyebrow">{s.bundle ? "Or buy one at a time" : s.name}</div>
+            <h2>The guides</h2>
+            <p className="lead">{s.lead}</p>
+          </div>
+          <div className="grid grid--books">
+            {s.books.map((g) => (
+              <GuideCard key={g.id} guide={g} />
             ))}
           </div>
-        )}
-      </div>
-    </article>
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -334,51 +457,54 @@ function GuideCard({ guide, index }) {
 
 function SiteHeader() {
   return (
-    <>
-      <header className="mny-mast">
-        <a className="mny-word" href="/">
-          MeanderNY
+    <header className="top">
+      <div className="wrap">
+        <a className="mark" href="/">
+          Meander<b>NY</b>
         </a>
-        <nav className="mny-mast-nav" aria-label="Primary">
-          <span className="mny-tag">A Catskill Meandering Project</span>
+        <nav className="top-nav" aria-label="Primary">
+          <span className="top-tag">A Catskill Meandering Project</span>
           <a href="/contact">Contact</a>
         </nav>
-      </header>
-      <div className="mny-rule" />
-    </>
+      </div>
+    </header>
   );
 }
 
 function SiteFooter() {
   return (
     <footer className="foot">
-      <div className="foot-row">
-        <span className="foot-word">
-          MeanderNY
-          <span>The field-guide side of Catskill Meandering</span>
-        </span>
-        <span className="foot-meta">© 2026 · meanderny.com</span>
+      <div className="wrap">
+        <div className="foot-row">
+          <span className="foot-word">
+            Meander<b>NY</b>
+            <span>The field-guide side of Catskill Meandering</span>
+          </span>
+          <span className="foot-meta">
+            © 2026 · meanderny.com · New York’s Upper Hudson Valley
+          </span>
+        </div>
+        <nav className="foot-nav" aria-label="Footer">
+          <a href="/">Guides</a>
+          <a href="/contact">Contact</a>
+        </nav>
+        <p className="foot-fam">
+          Also from Catskill Meandering:{" "}
+          <a href="https://hudsonvalleyalmanac.com/" target="_blank" rel="noopener">
+            Hudson Valley Almanac
+          </a>{" "}
+          ·{" "}
+          <a href="https://www.mohawkvalleyalmanac.com/" target="_blank" rel="noopener">
+            Mohawk Valley Almanac
+          </a>
+        </p>
+        <p className="foot-disc">
+          Unofficial field guides. Not affiliated with or endorsed by the NYS Department of
+          Environmental Conservation, the New York–New Jersey Trail Conference, or Avenza
+          Systems. Always confirm current rules, closures, and conditions with official sources
+          before you head out.
+        </p>
       </div>
-      <nav className="foot-nav" aria-label="Footer">
-        <a href="/">Guides</a>
-        <a href="/contact">Contact</a>
-      </nav>
-      <p className="foot-fam">
-        Also from Catskill Meandering:{" "}
-        <a href="https://hudsonvalleyalmanac.com/" target="_blank" rel="noopener">
-          Hudson Valley Almanac
-        </a>{" "}
-        ·{" "}
-        <a href="https://www.mohawkvalleyalmanac.com/" target="_blank" rel="noopener">
-          Mohawk Valley Almanac
-        </a>
-      </p>
-      <p className="foot-disc">
-        Unofficial field guides. Not affiliated with or endorsed by the NYS Department of
-        Environmental Conservation, the New York–New Jersey Trail Conference, or Avenza
-        Systems. Always confirm current rules, closures, and conditions with official sources
-        before you head out.
-      </p>
     </footer>
   );
 }
@@ -386,34 +512,42 @@ function SiteFooter() {
 /* --- pages ----------------------------------------------------------------- */
 
 function HomeView() {
-  const liveGuides = GUIDES.filter((g) => g.status === "available");
+  const seriesKeys = Object.keys(SERIES).filter((k) => GUIDES.some((g) => g.series === k));
+  const allSeries = seriesKeys.map(seriesData);
+  const featured = allSeries.find((s) => s.key === FEATURED_SERIES) || allSeries[0];
+  const moreGuides = GUIDES.filter((g) => !g.series && g.status === "available");
   const comingGuides = GUIDES.filter((g) => g.status === "coming-soon");
 
   return (
-    <>
+    <main>
       {/* hero */}
       <section className="hero">
-        <Topo className="hero-topo" />
-        <div className="hero-vig" />
-        <div className="hero-inner">
-          <div className="hero-text">
-            <span className="hero-eyebrow">Field Guides for New York's Outdoors</span>
+        <div className="wrap hero-grid">
+          <div>
+            <div className="eyebrow">Field Guides for New York's Outdoors</div>
             <h1>
               Field guides for getting <em>out there</em> in New York.
             </h1>
-            <p>
+            <p className="lede">
               Carefully researched guides to camping, hiking and meandering New York's
               backcountry, built on official DEC and NYNJTC sources, with every detail we
               couldn't confirm clearly marked.
             </p>
-            <a
-              className="btn btn--hero"
-              href={LONGPATH_NORTH_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              See the Long Path North guide <span className="arr">→</span>
-            </a>
+            <div className="cta">
+              {featured?.bundle && (
+                <a
+                  className="btn"
+                  href={featured.bundle.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Get the complete series
+                </a>
+              )}
+              <a className="btn ghost" href="#guides">
+                Browse the guides
+              </a>
+            </div>
             <div className="hero-meta">
               <span>
                 <i className="dot" />Sources shown, unknowns marked
@@ -423,15 +557,12 @@ function HomeView() {
               </span>
             </div>
           </div>
-          <img
-            className="hero-cover"
-            src="/long-path-north-cover-800.jpg"
-            width="800"
-            height="1280"
-            loading="eager"
-            alt=""
-            aria-hidden="true"
-          />
+          {featured && (
+            <CoverFan
+              books={featured.books}
+              label={`Covers of the ${featured.name.replace(/^The /, "").replace(/ series$/, "")} guides: ${listTitles(featured.books)}`}
+            />
+          )}
         </div>
       </section>
 
@@ -446,86 +577,92 @@ function HomeView() {
         <a href="#photographs">Photographs</a>
       </nav>
 
-      {/* guides */}
-      <div id="guides" className="sec-head">
-        <span className="sec-eyebrow">The Guides</span>
-        <span className="sec-line" />
-      </div>
-      <div className="grid">
-        {liveGuides.map((g, i) => (
-          <GuideCard key={g.id} guide={g} index={i} />
+      <div id="guides">
+        {allSeries.map((s) => (
+          <SeriesSection key={s.key} s={s} />
         ))}
-      </div>
 
-      {/* coming soon */}
-      <section id="coming-soon">
-        <div className="sec-head">
-          <span className="sec-eyebrow">Coming soon</span>
-          <span className="sec-line" />
-        </div>
-        <ul className="soon-list">
-          {comingGuides.map((g) => (
-            <li className="soon-row" key={g.id}>
-              <div className="soon-main">
-                <div className="soon-head">
-                  <h3 className="soon-title">{g.title}</h3>
-                  <span className="soon-region">{g.region}</span>
-                </div>
-                <p className="soon-blurb">{g.blurb}</p>
+        {/* guides outside a series */}
+        {moreGuides.length > 0 && (
+          <section className="sec sec--band" id="more-guides">
+            <div className="wrap">
+              <div className="eyebrow eyebrow--neutral">More guides</div>
+              <div className="grid">
+                {moreGuides.map((g) => (
+                  <GuideCard key={g.id} guide={g} />
+                ))}
               </div>
-              <span className="soon-flag">Coming soon</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* restored antique maps */}
-      <div id="maps" className="sec-head">
-        <span className="sec-eyebrow">Restored Antique Maps</span>
-        <span className="sec-line" />
-      </div>
-      <div className="grid grid--maps">
-        {MAPS.map((m, i) => (
-          <GuideCard key={m.id} guide={m} index={i} />
-        ))}
+            </div>
+          </section>
+        )}
       </div>
 
-      {/* antique photographs and postcards */}
-      <section id="photographs">
-        <div className="sec-head">
-          <span className="sec-eyebrow">Antique photographs and postcards</span>
-          <span className="sec-line" />
-        </div>
-        <div className="strip">
-          <p className="strip-text">
-            Restored 1900s photographs, postcards, and historical trail guides of the
-            Catskills.
+      <div className="wrap">
+        {/* coming soon */}
+        {comingGuides.length > 0 && (
+          <section id="coming-soon" className="sec sec--tight">
+            <div className="eyebrow eyebrow--neutral">Coming soon</div>
+            <ul className="soon-list">
+              {comingGuides.map((g) => (
+                <li className="soon-row" key={g.id}>
+                  <div className="soon-main">
+                    <div className="soon-head">
+                      <h3 className="soon-title">{g.title}</h3>
+                      <span className="soon-region">{g.subtitle}</span>
+                    </div>
+                    <p className="soon-blurb">{g.blurb}</p>
+                  </div>
+                  <span className="soon-flag">Coming soon</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* restored antique maps */}
+        <section id="maps" className="sec sec--tight">
+          <div className="eyebrow eyebrow--neutral">Restored Antique Maps</div>
+          <div className="grid grid--maps">
+            {MAPS.map((m) => (
+              <GuideCard key={m.id} guide={m} />
+            ))}
+          </div>
+        </section>
+
+        {/* antique photographs and postcards */}
+        <section id="photographs" className="sec sec--tight">
+          <div className="eyebrow eyebrow--neutral">Antique photographs and postcards</div>
+          <div className="strip">
+            <p className="strip-text">
+              Restored 1900s photographs, postcards, and historical trail guides of the
+              Catskills.
+            </p>
+            <a
+              className="btn"
+              href="https://www.etsy.com/shop/TheForgottenPress"
+              target="_blank"
+              rel="noopener"
+            >
+              Visit The Forgotten Press on Etsy
+            </a>
+          </div>
+          {/* TODO: thumbnail row — drop a <div className="strip-thumbs"> of 3–5
+              postcard/photo <img>s (lazy, with alt text) here once scans are ready. */}
+        </section>
+
+        {/* who makes these */}
+        <section className="maker">
+          <div className="eyebrow">Who makes these</div>
+          <p>
+            MeanderNY guides are made by Devlin Foster, a New York hiker. Land rules, water,
+            distances, and coordinates come from official NYS DEC and NYNJTC sources, plus hiker
+            reports and mapping data credited in each guide. When something can't be confirmed,
+            the guide says so instead of guessing. These are unofficial companions to the
+            official guides, not replacements for them.
           </p>
-          <a
-            className="btn"
-            href="https://www.etsy.com/shop/TheForgottenPress"
-            target="_blank"
-            rel="noopener"
-          >
-            Visit The Forgotten Press on Etsy <span className="arr">→</span>
-          </a>
-        </div>
-        {/* TODO: thumbnail row — drop a <div className="strip-thumbs"> of 3–5
-            postcard/photo <img>s (lazy, with alt text) here once scans are ready. */}
-      </section>
-
-      {/* who makes these */}
-      <section className="maker">
-        <span className="sec-eyebrow">Who makes these</span>
-        <p>
-          MeanderNY guides are made by Devlin Foster, a New York hiker. Land rules, water,
-          distances, and coordinates come from official NYS DEC and NYNJTC sources, plus hiker
-          reports and mapping data credited in each guide. When something can't be confirmed,
-          the guide says so instead of guessing. These are unofficial companions to the
-          official guides, not replacements for them.
-        </p>
-      </section>
-    </>
+        </section>
+      </div>
+    </main>
   );
 }
 
@@ -542,21 +679,24 @@ function ContactView() {
   );
 
   return (
-    <section className="page">
-      <h1 className="page-title">Contact and corrections</h1>
-      <p className="page-text">
-        Found a mistake, a business that has closed, or a trail that has changed? Email me.
-        Please include the guide, the page or section, and what you saw. Corrections are folded
-        into the next edition.
-      </p>
-      <a className="page-mail" href={CONTACT_MAILTO}>
-        {CONTACT_EMAIL}
-      </a>
-      <p className="page-note">
-        This address belongs to the Mohawk Valley Almanac, which hosts the companion page for
-        Long Path North.
-      </p>
-    </section>
+    <main className="wrap">
+      <section className="page">
+        <div className="eyebrow">Contact</div>
+        <h1 className="page-title">Contact and corrections</h1>
+        <p className="page-text">
+          Found a mistake, a business that has closed, or a trail that has changed? Email me.
+          Please include the guide, the page or section, and what you saw. Corrections are
+          folded into the next edition.
+        </p>
+        <a className="page-mail" href={CONTACT_MAILTO}>
+          {CONTACT_EMAIL}
+        </a>
+        <p className="page-note">
+          This address belongs to the Mohawk Valley Almanac, which hosts the companion page for
+          North of the Catskills.
+        </p>
+      </section>
+    </main>
   );
 }
 
@@ -577,8 +717,7 @@ export default function App() {
       const link = document.createElement("link");
       link.id = id;
       link.rel = "stylesheet";
-      link.href =
-        "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap";
+      link.href = FONTS_URL;
       document.head.append(pre1, pre2, link);
     }
   }, []);
@@ -589,203 +728,220 @@ export default function App() {
   return (
     <div className="mny">
       <style>{CSS}</style>
-
-      {/* page-wide faint contour texture */}
-      <div className="mny-bg" aria-hidden="true">
-        <Topo />
-      </div>
-
-      <div className="mny-wrap">
-        <SiteHeader />
-        {isContact ? <ContactView /> : <HomeView />}
-        <SiteFooter />
-      </div>
+      <SiteHeader />
+      {isContact ? <ContactView /> : <HomeView />}
+      <SiteFooter />
     </div>
   );
 }
 
+const FONTS_URL =
+  "https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Poppins:wght@500;600;700;800&display=swap";
+
 /* --- styles ---------------------------------------------------------------- */
+/* Colours follow the device's light/dark setting. Accents are named tokens so
+   each one has a light and a dark value; a guide's `accent` picks one. */
 
 const CSS = `
 html{ scroll-behavior:smooth; }
 .mny *{ box-sizing:border-box; }
 .mny{
-  --green:#33452f; --green2:#445c3c; --gold:#c2872f; --rust:#a8531e;
-  --copper:#8a4417;
-  --paper:#f5efe1; --paper2:#efe7d4; --paper3:#fffdf7;
-  --ink:#26211b; --soft:#5d5446; --line:#cdc1a6; --cream:#e6dcc2;
-  position:relative; min-height:100vh; background:var(--paper); color:var(--ink);
-  font-family:'Lora',Georgia,serif; line-height:1.6; overflow-x:hidden;
-  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  color-scheme:light dark;
+  --bg:#f6f1e4; --bg2:#ece5d2; --card:#fffdf6; --ink:#0c2a30; --muted:#4b6366; --line:#d9d0b8;
+  --teal:#0b7f7a; --amber:#b9690c; --blue:#2563c9; --rust:#a8461b; --green:#3d6b2f; --neutral:#5f7275;
+  --accent:var(--teal); --btn:#0c2a30; --btnink:#f6f1e4;
+  --shadow:0 10px 30px rgba(12,42,48,.12);
+  --head:"Poppins","Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+  --serif:"Lora",Georgia,"Times New Roman",serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  min-height:100vh; background:var(--bg); color:var(--ink);
+  font-family:var(--body); line-height:1.6; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased; -webkit-text-size-adjust:100%;
 }
-.mny-bg{ position:fixed; inset:0; color:var(--line); opacity:0.38; pointer-events:none; z-index:0; }
-.mny-bg svg{ width:100%; height:100%; }
-.mny-wrap{ position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 24px 64px; }
+@media (prefers-color-scheme:dark){
+  .mny{
+    --bg:#071417; --bg2:#0b1f24; --card:#0e262c; --ink:#f4efe0; --muted:#a9bfc0; --line:#1c3a40;
+    --teal:#2de0d2; --amber:#f2a93b; --blue:#58a4ff; --rust:#f08a5d; --green:#8fd16f; --neutral:#9fb3b4;
+    --btn:#2de0d2; --btnink:#06191c;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+  }
+}
+.mny a{ color:inherit; }
+.mny :focus-visible{ outline:3px solid var(--teal); outline-offset:3px; border-radius:6px; }
+.wrap{ width:min(1100px, 100% - 40px); margin-inline:auto; }
+.eyebrow{ font:700 .78rem/1.2 var(--head); letter-spacing:.2em; text-transform:uppercase; color:var(--accent); }
+.eyebrow--neutral{ color:var(--neutral); }
+.mny h1, .mny h2, .mny h3{ font-family:var(--head); }
+.mny h2{ font-weight:800; font-size:clamp(1.4rem,3vw,2rem); line-height:1.15; margin:.4rem 0 .5rem; }
 
-/* masthead */
-.mny-mast{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:28px 0 14px; }
-.mny-word{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.26em; font-weight:700; font-size:19px; color:var(--green); text-decoration:none; }
-.mny-tag{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.16em; font-size:11.5px; color:var(--soft); }
-.mny-mast-nav{ display:flex; align-items:baseline; gap:18px; flex-wrap:wrap; }
-.mny-mast-nav a{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.16em; font-size:12px; font-weight:600; color:var(--copper); text-decoration:none; transition:color .2s ease; }
-.mny-mast-nav a:hover{ color:var(--rust); }
-.mny-rule{ height:1px; background:var(--line); }
+/* header */
+.top{ border-bottom:1px solid var(--line); background:var(--bg2); }
+.top .wrap{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; }
+.mark{ font:800 1.15rem/1 var(--head); letter-spacing:.12em; text-transform:uppercase; text-decoration:none; }
+.mark b, .foot-word b{ color:var(--teal); font-weight:800; }
+.top-nav{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; justify-content:flex-end; }
+.top-tag{ font:600 .72rem/1.2 var(--head); letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+.top-nav a{ font:700 .78rem/1 var(--head); letter-spacing:.14em; text-transform:uppercase; text-decoration:none; color:var(--teal); }
+.top-nav a:hover{ text-decoration:underline; text-underline-offset:4px; }
+
+/* buttons */
+.btn{
+  display:inline-block; padding:14px 22px; border-radius:999px; font:700 .95rem/1 var(--head);
+  text-decoration:none; background:var(--btn); color:var(--btnink) !important; border:2px solid var(--btn);
+  transition:transform .15s ease; text-align:center;
+}
+.btn:hover{ transform:translateY(-2px); }
+.btn.ghost{ background:transparent; color:var(--ink) !important; border-color:var(--line); }
+.btn.ghost:hover{ border-color:var(--teal); }
 
 /* hero */
-.hero{ position:relative; margin-top:22px; border-radius:7px; overflow:hidden; background:var(--green); color:var(--paper); }
-.hero-topo{ position:absolute; inset:0; width:100%; height:100%; color:var(--paper); opacity:0.15; }
-.hero-vig{ position:absolute; inset:0; background:radial-gradient(120% 115% at 24% 26%, rgba(68,92,60,0) 0%, rgba(18,26,16,0.5) 100%); }
-.hero-inner{ position:relative; padding:52px 48px 48px; display:flex; align-items:center; gap:44px; }
-.hero-text{ flex:1 1 auto; min-width:0; }
-.hero-cover{ flex:0 0 auto; width:auto; height:330px; align-self:center; display:block; border-radius:6px; box-shadow:0 22px 46px -18px rgba(0,0,0,0.62), 0 4px 12px rgba(0,0,0,0.3); }
-.hero-eyebrow{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.3em; font-size:12px; font-weight:600; color:var(--gold); }
-.hero h1{ font-weight:700; font-size:46px; line-height:1.06; letter-spacing:-0.015em; margin:18px 0 0; max-width:16ch; }
-.hero h1 em{ color:var(--gold); font-style:italic; font-weight:600; }
-.hero p{ font-size:17px; color:var(--cream); margin:18px 0 0; max-width:52ch; line-height:1.55; }
-.hero-meta{ margin-top:26px; display:flex; gap:26px; flex-wrap:wrap; font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.12em; font-size:12px; color:var(--cream); }
+.hero{ padding:clamp(40px,7vw,88px) 0 clamp(36px,6vw,72px);
+  background:radial-gradient(900px 400px at 85% 0%, color-mix(in srgb, var(--teal) 16%, transparent), transparent 70%), var(--bg); }
+.hero-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:clamp(24px,5vw,64px); align-items:center; }
+.hero h1{ font-weight:800; font-size:clamp(2rem,5.2vw,3.6rem); line-height:1.08; margin:.5rem 0 1rem; letter-spacing:-.01em; }
+.hero h1 em{ font:italic 500 1em/1 var(--serif); color:var(--teal); }
+.lede{ font-size:clamp(1.05rem,1.8vw,1.25rem); color:var(--muted); max-width:34em; margin:0 0 1.6rem; }
+.cta{ display:flex; flex-wrap:wrap; gap:12px; }
+.hero-meta{ margin-top:24px; display:flex; gap:10px 26px; flex-wrap:wrap; font:600 .72rem/1.3 var(--head); letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
 .hero-meta span{ display:inline-flex; align-items:center; gap:9px; }
-.dot{ width:6px; height:6px; border-radius:50%; background:var(--gold); display:inline-block; }
+.dot{ width:6px; height:6px; border-radius:50%; background:var(--teal); display:inline-block; }
+
+/* cover fan (hero + bundle) */
+.fan{ position:relative; height:clamp(300px,42vw,470px); }
+.fan-cv{ position:absolute; width:44%; height:auto; aspect-ratio:5/8; object-fit:cover; border-radius:8px; box-shadow:var(--shadow); border:1px solid var(--line); }
+.fan-cv--a{ left:2%; top:9%; transform:rotate(-7deg); }
+.fan-cv--b{ left:28%; top:0; transform:rotate(1deg); z-index:2; }
+.fan-cv--c{ right:2%; top:11%; transform:rotate(8deg); }
+.fan-cv--solo{ left:28%; top:0; transform:none; }
+.fan--mini{ height:auto; width:clamp(150px,22vw,230px); aspect-ratio:1/0.82; }
+.fan--mini .fan-cv{ top:auto; bottom:0; width:46%; border-radius:6px; }
+.fan--mini .fan-cv--a{ left:0; transform:rotate(-6deg); }
+.fan--mini .fan-cv--b{ left:27%; bottom:6%; transform:none; }
+.fan--mini .fan-cv--c{ right:0; transform:rotate(6deg); }
 
 /* in-page nav */
 .mny-nav{
   position:sticky; top:0; z-index:5;
   display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap;
-  margin-top:18px; padding:13px 0;
-  background:rgba(245,239,225,0.94); backdrop-filter:blur(4px);
-  border-bottom:1px solid var(--line);
-  font-family:'Barlow Condensed',sans-serif; text-transform:uppercase;
-  letter-spacing:0.16em; font-size:14px; font-weight:600;
+  padding:13px 20px; background:color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter:blur(6px);
+  border-block:1px solid var(--line);
+  font:700 .78rem/1 var(--head); letter-spacing:.16em; text-transform:uppercase;
 }
-.mny-nav a{ color:var(--green); text-decoration:none; padding:4px 2px; transition:color .2s ease; }
-.mny-nav a:hover{ color:var(--copper); }
+.mny-nav a{ color:var(--ink); text-decoration:none; padding:4px 2px; }
+.mny-nav a:hover{ color:var(--teal); }
 .mny-nav-sep{ color:var(--line); }
-#guides, #coming-soon, #maps, #photographs, #framed-1882{ scroll-margin-top:72px; }
+#guides, #more-guides, #coming-soon, #maps, #photographs, #framed-1882, .series{ scroll-margin-top:56px; }
 
-/* section header */
-.sec-head{ display:flex; align-items:center; gap:16px; margin:56px 0 24px; }
-.sec-eyebrow{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.2em; font-size:12px; font-weight:600; color:var(--copper); }
-.sec-line{ flex:1; height:1px; background:var(--line); }
+/* route strip */
+.route{ padding:clamp(28px,5vw,56px) 0; background:var(--bg2); border-bottom:1px solid var(--line); }
+.route .sub{ margin:0 0 1.4rem; color:var(--muted); max-width:40em; }
+.bar{ display:flex; height:16px; border-radius:999px; overflow:hidden; gap:3px; }
+.bar i{ display:block; background:var(--accent); }
+.legs{ display:flex; gap:3px; margin-top:10px; font:600 .8rem/1.3 var(--head); }
+.legs span{ padding-inline:2px; color:var(--accent); min-width:0; }
+.ends{ display:flex; justify-content:space-between; margin-top:6px; font:600 .72rem/1 var(--head); letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
 
-/* guide grid */
-.grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:26px; }
-.grid--maps{ grid-template-columns:repeat(2, 1fr); }
-.card{
-  background:var(--paper3); border:1px solid var(--line); border-radius:7px; overflow:hidden;
-  display:flex; flex-direction:column;
-  opacity:0; transform:translateY(14px); animation:rise .6s cubic-bezier(.2,.7,.2,1) forwards;
-  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-}
-.card:hover{ transform:translateY(-5px); box-shadow:0 18px 36px -20px rgba(38,33,27,0.55); border-color:var(--green2); }
-@keyframes rise{ to{ opacity:1; transform:translateY(0); } }
+/* sections */
+.sec{ padding:clamp(40px,6vw,76px) 0; }
+.sec--tight{ padding:clamp(28px,4vw,48px) 0 0; }
+.sec--band{ background:var(--bg2); border-block:1px solid var(--line); }
+.sec-head--after{ margin-top:clamp(40px,6vw,64px); }
+.lead{ color:var(--muted); max-width:40em; margin:0; }
 
-/* card cover (rendered panel) */
-.cover{ position:relative; aspect-ratio:3/2; background:var(--green); color:var(--paper); overflow:hidden; }
-.cover.has-img img{ width:100%; height:100%; object-fit:cover; display:block; }
-.cover-topo{ position:absolute; inset:0; width:100%; height:100%; color:var(--paper); opacity:0.15; }
-.cover-vig{ position:absolute; inset:0; background:radial-gradient(135% 105% at 50% 24%, rgba(68,92,60,0) 0%, rgba(18,26,16,0.5) 100%); }
-.cover-inner{ position:relative; height:100%; padding:22px 22px 20px; display:flex; flex-direction:column; }
-.cover-eyebrow{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.22em; font-size:9.5px; font-weight:600; color:var(--gold); }
-.cover-route{ width:118px; height:34px; margin:10px 0 0; }
-.cover-title{ font-weight:700; font-size:25px; line-height:1.06; letter-spacing:-0.01em; margin:auto 0 0; }
-.cover-region{ font-style:italic; font-size:12.5px; color:var(--cream); margin-top:7px; }
-.cover.coming-soon .cover-vig{ background:linear-gradient(180deg, rgba(38,33,27,0.30), rgba(38,33,27,0.52)); }
-/* book-cover variant: text left, portrait cover on the right */
-.cover-inner--book{ width:56%; padding-right:6px; }
-.cover-book{ position:absolute; top:50%; right:20px; transform:translateY(-50%); height:82%; max-height:190px; width:auto; border-radius:3px; box-shadow:0 12px 24px -8px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.35); }
-.cover-flag{
-  position:absolute; top:15px; right:-32px; transform:rotate(45deg);
-  background:var(--rust); color:var(--paper);
-  font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.12em;
-  font-size:10px; font-weight:600; padding:4px 38px; box-shadow:0 2px 6px rgba(0,0,0,0.18);
-}
+/* bundle */
+.bundle{ display:grid; grid-template-columns:auto 1fr; gap:clamp(18px,4vw,40px); align-items:center; background:var(--card); border:2px solid var(--accent); border-radius:20px; padding:clamp(18px,3.5vw,34px); box-shadow:var(--shadow); }
+.bundle h3{ font-weight:800; font-size:clamp(1.25rem,2.6vw,1.7rem); line-height:1.2; margin:.6rem 0 .5rem; }
+.bundle p{ margin:0 0 1rem; color:var(--muted); }
+.bundle .price{ display:block; color:var(--ink); }
+.badge{ display:inline-block; font:700 .72rem/1 var(--head); letter-spacing:.14em; text-transform:uppercase; background:var(--accent); color:var(--btnink); padding:6px 10px; border-radius:999px; }
+.price{ font:800 1.5rem/1 var(--head); color:var(--ink); }
+.price s{ font-weight:600; font-size:1rem; color:var(--muted); margin-left:8px; }
+.price--label{ font-size:1rem; font-weight:700; line-height:1.3; }
 
-/* card body */
-.card-body{ padding:18px 20px 20px; display:flex; flex-direction:column; gap:16px; flex:1; }
-.card-blurb{ font-size:14.5px; color:var(--soft); line-height:1.55; margin:0; }
-.card-note{ font-size:12px; font-style:italic; color:var(--soft); margin:-6px 0 0; }
-.card-buy{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:auto; }
-.price{ font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:23px; color:var(--ink); }
-.price--label{ font-size:14px; font-weight:600; line-height:1.3; min-width:0; flex:1 1 auto; }
-.soon{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.14em; font-size:12.5px; font-weight:600; color:var(--copper); }
-.card-links{ display:flex; flex-direction:column; gap:2px; margin:2px 0 0; }
-.card-link{ align-self:flex-start; display:inline-flex; align-items:center; min-height:44px; font-size:15px; line-height:1.3; color:var(--copper); text-decoration:underline; text-underline-offset:2px; transition:color .2s ease; }
-.card-link:hover{ color:var(--rust); }
-.btn{
-  display:inline-block;
-  font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.1em;
-  font-size:13px; font-weight:600; background:var(--green); color:var(--paper);
-  padding:10px 17px; border-radius:999px; text-decoration:none; white-space:nowrap;
-  transition:background .2s ease;
-}
-.btn:hover{ background:var(--green2); }
-.btn .arr{ display:inline-block; transition:transform .2s ease; }
-.btn:hover .arr{ transform:translateX(3px); }
-.btn--hero{ margin-top:24px; background:var(--gold); color:var(--ink); font-size:14px; padding:12px 22px; }
-.btn--hero:hover{ background:#b07a28; }
+/* cards */
+.grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:22px; margin-top:26px; }
+.grid--books{ grid-template-columns:repeat(3,1fr); }
+.grid--maps{ grid-template-columns:repeat(2,1fr); }
+.card{ background:var(--card); border:1px solid var(--line); border-top:5px solid var(--accent); border-radius:16px; padding:20px; display:flex; flex-direction:column; box-shadow:var(--shadow); min-width:0; }
+.card-cv{ display:block; width:62%; height:auto; margin:0 auto 16px; aspect-ratio:5/8; object-fit:cover; border-radius:8px; border:1px solid var(--line); box-shadow:var(--shadow); }
+.card-img{ display:block; width:calc(100% + 40px); height:auto; margin:-20px -20px 16px; aspect-ratio:3/2; object-fit:cover; border-radius:11px 11px 0 0; }
+.bk{ font:700 .72rem/1 var(--head); letter-spacing:.18em; text-transform:uppercase; color:var(--accent); }
+.card h3{ font-weight:700; font-size:1.15rem; line-height:1.25; margin:.5rem 0; }
+.card-facts{ list-style:none; margin:0 0 .9rem; padding:0; font-size:.92rem; color:var(--muted); }
+.card-facts li{ padding:.15rem 0; }
+.card-facts b{ color:var(--ink); font-weight:600; }
+.card-sub{ margin:0 0 .7rem; font:italic 500 .95rem/1.4 var(--serif); color:var(--muted); }
+.card-blurb{ margin:0 0 1.1rem; font-size:.95rem; color:var(--muted); }
+.card-note{ margin:-.6rem 0 1.1rem; font-size:.82rem; font-style:italic; color:var(--muted); }
+.card-body{ display:flex; flex-direction:column; }
+.card-foot{ margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.card-foot .btn{ padding:11px 18px; font-size:.85rem; }
+.card-links{ display:flex; flex-direction:column; margin-top:8px; }
+.card-link{ align-self:flex-start; display:inline-flex; align-items:center; min-height:44px; font-size:.92rem; line-height:1.3; text-underline-offset:3px; color:var(--ink); }
+.card-link:hover{ color:var(--teal); }
 
 /* coming soon rows */
-.soon-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
-.soon-row{ display:flex; align-items:center; justify-content:space-between; gap:20px; background:var(--paper3); border:1px solid var(--line); border-left:3px solid var(--cream); border-radius:7px; padding:16px 22px; }
+.soon-list{ list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:12px; }
+.soon-row{ display:flex; align-items:center; justify-content:space-between; gap:20px; background:var(--card); border:1px solid var(--line); border-left:5px solid var(--neutral); border-radius:16px; padding:16px 22px; }
 .soon-main{ min-width:0; }
 .soon-head{ display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
-.soon-title{ font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; letter-spacing:0.01em; color:var(--green); margin:0; }
-.soon-region{ font-style:italic; font-size:13px; color:var(--soft); }
-.soon-blurb{ margin:6px 0 0; font-size:14px; color:var(--soft); line-height:1.5; max-width:84ch; }
-.soon-flag{ flex:0 0 auto; font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.14em; font-size:12px; font-weight:600; color:var(--copper); white-space:nowrap; }
+.soon-title{ font-weight:700; font-size:1.05rem; margin:0; }
+.soon-region{ font:italic 500 .9rem/1.4 var(--serif); color:var(--muted); }
+.soon-blurb{ margin:6px 0 0; font-size:.92rem; color:var(--muted); max-width:84ch; }
+.soon-flag{ flex:0 0 auto; font:700 .72rem/1 var(--head); letter-spacing:.14em; text-transform:uppercase; color:var(--btnink); background:var(--neutral); padding:6px 10px; border-radius:999px; white-space:nowrap; }
 
 /* photographs strip */
-.strip{ display:flex; align-items:center; justify-content:space-between; gap:24px; background:var(--paper2); border:1px solid var(--line); border-left:4px solid var(--gold); border-radius:7px; padding:22px 28px; }
-.strip-text{ margin:0; font-size:16px; color:var(--ink); line-height:1.55; max-width:62ch; }
+.strip{ display:flex; align-items:center; justify-content:space-between; gap:24px; margin-top:20px; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 28px; box-shadow:var(--shadow); }
+.strip-text{ margin:0; font-size:1rem; max-width:62ch; }
 .strip .btn{ flex:0 0 auto; }
 
 /* who makes these */
-.maker{ margin-top:58px; background:var(--paper2); border:1px solid var(--line); border-left:4px solid var(--gold); border-radius:7px; padding:26px 30px; }
-.maker p{ margin:11px 0 0; font-size:15px; color:var(--ink); line-height:1.62; max-width:74ch; }
+.maker{ margin:clamp(40px,6vw,64px) 0 clamp(40px,6vw,64px); padding-top:18px; border-top:3px solid var(--teal); max-width:52em; }
+.maker p{ margin:10px 0 0; color:var(--muted); }
 
 /* footer */
-.foot{ margin-top:48px; border-top:1px solid var(--line); padding-top:24px; display:flex; flex-direction:column; gap:14px; }
-.foot-row{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap; }
-.foot-word{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.2em; font-weight:700; font-size:14px; color:var(--green); }
-.foot-word span{ display:block; text-transform:none; letter-spacing:0; font-weight:400; font-style:italic; font-size:12.5px; color:var(--soft); font-family:'Lora',serif; margin-top:4px; }
-.foot-meta{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.14em; font-size:12px; color:var(--soft); }
-.foot-nav{ display:flex; gap:18px; flex-wrap:wrap; font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.14em; font-size:12px; font-weight:600; }
-.foot-nav a{ color:var(--soft); text-decoration:none; transition:color .2s ease; }
-.foot-nav a:hover{ color:var(--copper); }
-.foot-fam{ font-size:12.5px; color:var(--soft); line-height:1.55; margin:0; }
-.foot-fam a{ color:var(--copper); text-decoration:underline; text-underline-offset:2px; transition:color .2s ease; }
-.foot-fam a:hover{ color:var(--rust); }
-.foot-disc{ font-size:12px; color:var(--soft); line-height:1.55; max-width:82ch; margin:0; }
+.foot{ border-top:1px solid var(--line); background:var(--bg2); padding:26px 0 34px; color:var(--muted); font-size:.85rem; }
+.foot .wrap{ display:flex; flex-direction:column; gap:14px; }
+.foot-row{ display:flex; justify-content:space-between; align-items:baseline; gap:10px 24px; flex-wrap:wrap; }
+.foot-word{ font:800 1rem/1 var(--head); letter-spacing:.12em; text-transform:uppercase; color:var(--ink); }
+.foot-word span{ display:block; margin-top:6px; text-transform:none; letter-spacing:0; font:italic 500 .85rem/1.3 var(--serif); color:var(--muted); }
+.foot-meta{ font:600 .72rem/1.4 var(--head); letter-spacing:.12em; text-transform:uppercase; }
+.foot-nav{ display:flex; gap:18px; flex-wrap:wrap; font:700 .75rem/1 var(--head); letter-spacing:.14em; text-transform:uppercase; }
+.foot-nav a{ text-decoration:none; color:var(--ink); }
+.foot-nav a:hover{ color:var(--teal); }
+.foot-fam, .foot-disc{ margin:0; line-height:1.55; max-width:82ch; }
+.foot-fam a{ color:var(--ink); text-underline-offset:3px; }
 
 /* simple content page (contact) */
-.page{ margin-top:48px; max-width:62ch; }
-.page-title{ font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:36px; line-height:1.08; letter-spacing:-0.01em; color:var(--green); margin:0 0 18px; }
-.page-text{ font-size:16px; color:var(--ink); line-height:1.62; margin:0 0 24px; }
-.page-mail{ font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:21px; letter-spacing:0.02em; color:var(--copper); text-decoration:underline; text-underline-offset:3px; transition:color .2s ease; }
-.page-mail:hover{ color:var(--rust); }
-.page-note{ font-size:14px; color:var(--soft); line-height:1.6; margin:18px 0 0; }
+.page{ padding:clamp(40px,7vw,88px) 0; max-width:40em; }
+.page-title{ font-weight:800; font-size:clamp(2rem,4.4vw,3rem); line-height:1.1; margin:.5rem 0 1rem; }
+.page-text{ font-size:1.05rem; color:var(--muted); margin:0 0 1.4rem; }
+.page-mail{ font:700 1.2rem/1.3 var(--head); color:var(--teal) !important; text-underline-offset:4px; word-break:break-word; }
+.page-note{ font-size:.92rem; color:var(--muted); margin:1.2rem 0 0; }
 
 @media (max-width:900px){
-  .grid--maps{ grid-template-columns:repeat(2, 1fr); }
+  .hero-grid{ grid-template-columns:1fr; }
+  .hero .fan{ max-width:520px; width:100%; margin-inline:auto; }
+  .grid--books{ grid-template-columns:1fr; }
+  .card--book{ display:grid; grid-template-columns:34% 1fr; column-gap:18px; }
+  .card--book .card-cv{ width:100%; margin:0 0 14px; grid-row:span 1; }
+  .card--book .card-foot, .card--book .card-links{ grid-column:1 / -1; }
 }
 @media (max-width:640px){
-  .hero-inner{ padding:22px 20px 24px; flex-direction:column; gap:0; }
-  .hero-cover{ display:none; }
-  .hero h1{ font-size:29px; margin-top:10px; }
-  .hero p{ font-size:15.5px; margin-top:10px; }
-  .btn--hero{ margin-top:14px; white-space:normal; }
-  .hero-meta{ margin-top:12px; gap:8px 18px; }
-  .mny-nav{ margin-top:10px; padding:9px 0; gap:6px 10px; font-size:11.5px; letter-spacing:0.12em; }
-  .sec-head{ margin:22px 0 16px; }
-  .grid{ grid-template-columns:1fr; }
+  .top-tag{ display:none; }
+  .bundle{ grid-template-columns:1fr; text-align:center; }
+  .fan--mini{ margin-inline:auto; }
+  .cta .btn{ width:100%; }
+  .legs{ font-size:.7rem; }
   .grid--maps{ grid-template-columns:1fr; }
-  .mny-mast{ flex-direction:column; gap:2px; }
+  .mny-nav{ gap:6px 10px; padding:10px 12px; font-size:.68rem; letter-spacing:.12em; }
   .soon-row{ flex-direction:column; align-items:flex-start; gap:8px; }
-  .strip{ flex-direction:column; align-items:flex-start; }
-  .strip .btn{ white-space:normal; text-align:center; }
+  .strip{ flex-direction:column; align-items:flex-start; padding:20px; }
+  .strip .btn{ width:100%; }
 }
-@media (prefers-reduced-motion: reduce){
+@media (prefers-reduced-motion:reduce){
   html{ scroll-behavior:auto; }
-  .card{ animation:none; opacity:1; transform:none; }
-  .btn .arr{ transition:none; }
+  .btn{ transition:none; }
+  .btn:hover{ transform:none; }
 }
 `;

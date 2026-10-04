@@ -266,6 +266,8 @@ const GUIDES = [
     section: "also-by",
     title: "The World Kitchen on a Budget",
     label: "",
+    subtitle: "Global Recipes for Short Nights and Shorter Budgets", // as printed on the cover
+    cover: "/covers/world-kitchen-on-a-budget.jpg",
     status: "available",
     url: "https://www.barnesandnoble.com/w/the-world-kitchen-on-a-budget-devlin-foster/1151323091",
     cta: BN_CTA,
@@ -275,6 +277,8 @@ const GUIDES = [
     section: "also-by",
     title: "When the Numbers Change",
     label: "",
+    subtitle: "How to Keep a Household Going When Resources Get Tight", // as printed on the cover
+    cover: "/covers/when-the-numbers-change.jpg",
     status: "available",
     url: "https://www.barnesandnoble.com/w/when-the-numbers-change-devlin-foster/1151359465",
     cta: BN_CTA,
@@ -997,6 +1001,7 @@ html{ scroll-behavior:smooth; }
 .card-foot .btn:only-child{ margin-left:auto; }
 .also .card{ box-shadow:none; border-top-width:1px; background:transparent; padding:16px 18px; }
 .also .card h3{ font-size:1rem; }
+.also .card-cv{ width:42%; box-shadow:none; }
 .also .btn{ background:transparent; color:var(--ink) !important; border-color:var(--line); }
 .also .btn:hover{ border-color:var(--teal); }
 .also .grid{ margin-top:18px; }

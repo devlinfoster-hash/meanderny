@@ -36,6 +36,7 @@ function setDocumentHead({ title, description, canonical }) {
      heading    route-strip heading
      sub        route-strip sentence
      lead       sentence above the book cards
+     note       OPTIONAL one line under the book cards
      start/end  labels under the two ends of the route strip
      accent     colour of the series bundle (see ACCENTS below)
    ========================================================================== */
@@ -45,6 +46,7 @@ const SERIES = {
     heading: "Manhattan to Altamont, in order",
     sub: "Each guide picks up where the last one ends, so you can plan a weekend, a section, or the whole way through.",
     lead: "Free & Legal Backcountry Camping, one guide for each stretch of the trail.",
+    note: "Paperback editions planned.",
     start: "Washington Heights",
     end: "Altamont",
     accent: "teal",
@@ -67,7 +69,7 @@ const FEATURED_SERIES = "long-path";
      subtitle   one line under the title (for a series book: "From to To")
      blurb      one sentence of what's inside
      price      number in dollars; priceLabel (optional) replaces it, e.g. "Free download"
-     url        the Gumroad product URL
+     url        the Gumroad product URL ("" = card shows without price or button)
      status     "available" -> card with price + button
                 "coming-soon" -> compact row in "Coming soon", no link
      cover      OPTIONAL portrait cover, 800x1280 jpg in public/covers/
@@ -183,6 +185,22 @@ const GUIDES = [
     subtitle: "Catskill Park · find them, reach them, safely",
     blurb:
       "The falls worth chasing — where to actually park, how to reach each one legally, which are family-easy, and which have hurt people. Access and honest safety beta, not a scenery list.",
+    price: null,
+    status: "available",
+    url: "", // store link to come; the price and button appear once url and price are set
+  },
+  {
+    id: "different-overlanding",
+    title: "A Different Kind of Overlanding",
+    blurb: "Weekend car camping and scenic drives in upstate New York.",
+    price: null,
+    status: "coming-soon",
+    url: "",
+  },
+  {
+    id: "beyond-the-eight",
+    title: "Beyond the Eight",
+    blurb: "Fire towers to visit after you've earned the patch.",
     price: null,
     status: "coming-soon",
     url: "",
@@ -371,12 +389,14 @@ function GuideCard({ guide }) {
         <p className="card-blurb">{guide.blurb}</p>
         {guide.note && <p className="card-note">{guide.note}</p>}
       </div>
-      <div className="card-foot">
-        <Price guide={guide} />
-        <a className="btn" href={guide.url} target="_blank" rel="noopener noreferrer">
-          {guide.cta || "Get the guide"}
-        </a>
-      </div>
+      {guide.url && (
+        <div className="card-foot">
+          <Price guide={guide} />
+          <a className="btn" href={guide.url} target="_blank" rel="noopener noreferrer">
+            {guide.cta || "Get the guide"}
+          </a>
+        </div>
+      )}
       <CardLinks links={guide.links} />
     </article>
   );
@@ -450,6 +470,7 @@ function SeriesSection({ s }) {
               <GuideCard key={g.id} guide={g} />
             ))}
           </div>
+          {s.note && <p className="series-note">{s.note}</p>}
         </div>
       </section>
     </div>
@@ -610,7 +631,7 @@ function HomeView() {
                   <div className="soon-main">
                     <div className="soon-head">
                       <h3 className="soon-title">{g.title}</h3>
-                      <span className="soon-region">{g.subtitle}</span>
+                      {g.subtitle && <span className="soon-region">{g.subtitle}</span>}
                     </div>
                     <p className="soon-blurb">{g.blurb}</p>
                   </div>
@@ -849,6 +870,7 @@ html{ scroll-behavior:smooth; }
 .sec--band{ background:var(--bg2); border-block:1px solid var(--line); }
 .sec-head--after{ margin-top:clamp(40px,6vw,64px); }
 .lead{ color:var(--muted); max-width:40em; margin:0; }
+.series-note{ margin:18px 0 0; font:600 .78rem/1.4 var(--head); letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
 
 /* bundle */
 .bundle{ display:grid; grid-template-columns:auto 1fr; gap:clamp(18px,4vw,40px); align-items:center; background:var(--card); border:2px solid var(--accent); border-radius:20px; padding:clamp(18px,3.5vw,34px); box-shadow:var(--shadow); }

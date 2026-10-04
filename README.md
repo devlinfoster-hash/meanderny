@@ -68,6 +68,8 @@ contents change.
 
 Leave out `series`, `book`, `short` and `route`. It appears under **More
 guides** with the neutral accent. `cover` is optional there.
+Leave `url` empty (`""`) to show the card without a price or button until the
+store link is ready.
 
 ```js
 {

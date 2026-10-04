@@ -262,14 +262,6 @@ const GUIDES = [
     url: "",
   },
   {
-    id: "beyond-the-eight",
-    title: "Beyond the Eight",
-    blurb: "Fire towers to visit after you've earned the patch.",
-    price: null,
-    status: "coming-soon",
-    url: "",
-  },
-  {
     id: "world-kitchen-on-a-budget",
     section: "also-by",
     title: "The World Kitchen on a Budget",

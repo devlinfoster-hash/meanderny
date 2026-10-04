@@ -197,13 +197,17 @@ const GUIDES = [
     blurb:
       "The falls worth chasing — where to actually park, how to reach each one legally, which are family-easy, and which have hurt people. Access and honest safety beta, not a scenery list.",
     status: "available",
+    cover: "/covers/catskill-waterfalls.jpg",
     url: "https://www.barnesandnoble.com/w/catskill-waterfalls-devlin-foster/1151459185",
     cta: BN_CTA,
   },
   {
     id: "trails-that-say-yes",
     title: "Trails That Say Yes",
-    label: "",
+    // label and subtitle as printed on the cover
+    label: "A MeanderNY Guide",
+    subtitle: "An Honest, Verified Guide to Wheelchair- and Low-Stamina-Friendly Trails in the Hudson Valley and Capital Region",
+    cover: "/covers/trails-that-say-yes.jpg",
     status: "available",
     url: "https://www.barnesandnoble.com/w/trails-that-say-yes-devlin-foster/1151457321",
     cta: BN_CTA,
@@ -211,7 +215,10 @@ const GUIDES = [
   {
     id: "closer-than-you-think",
     title: "Closer Than You Think",
-    label: "",
+    // label and subtitle as printed on the cover
+    label: "A Hudson Valley Almanac Guide",
+    subtitle: "22 Upstate Saturdays",
+    cover: "/covers/closer-than-you-think.jpg",
     status: "available",
     url: "https://www.barnesandnoble.com/w/closer-than-you-think-devlin-foster/1151458991",
     cta: BN_CTA,
@@ -219,7 +226,10 @@ const GUIDES = [
   {
     id: "choose-your-own-saturday",
     title: "Choose Your Own Saturday",
-    label: "",
+    // label and subtitle as printed on the cover
+    label: "A Hudson Valley Almanac Guide",
+    subtitle: "15 Themed Trails to Cideries, Sugarhouses, Orchards & Makers",
+    cover: "/covers/choose-your-own-saturday.jpg",
     status: "available",
     url: "https://www.barnesandnoble.com/w/choose-your-own-saturday-devlin-foster/1151479117",
     cta: BN_CTA,
@@ -227,7 +237,10 @@ const GUIDES = [
   {
     id: "hudson-valley-finds",
     title: "Hudson Valley Finds",
-    label: "",
+    // label and subtitle as printed on the cover
+    label: "A MeanderNY Guide",
+    subtitle: "A Real Guide to Antiquing Across Six Counties",
+    cover: "/covers/hudson-valley-finds.jpg",
     status: "available",
     url: "https://www.barnesandnoble.com/w/hudson-valley-finds-devlin-foster/1151479099",
     cta: BN_CTA,
@@ -971,7 +984,7 @@ html{ scroll-behavior:smooth; }
 .card{ background:var(--card); border:1px solid var(--line); border-top:5px solid var(--accent); border-radius:16px; padding:20px; display:flex; flex-direction:column; box-shadow:var(--shadow); min-width:0; }
 .card-cv{ display:block; width:62%; height:auto; margin:0 auto 16px; aspect-ratio:5/8; object-fit:cover; border-radius:8px; border:1px solid var(--line); box-shadow:var(--shadow); }
 .card-img{ display:block; width:calc(100% + 40px); height:auto; margin:-20px -20px 16px; aspect-ratio:3/2; object-fit:cover; border-radius:11px 11px 0 0; }
-.bk{ font:700 .72rem/1 var(--head); letter-spacing:.18em; text-transform:uppercase; color:var(--accent); }
+.bk{ font:700 .72rem/1.35 var(--head); letter-spacing:.18em; text-transform:uppercase; color:var(--accent); }
 .card h3{ font-weight:700; font-size:1.15rem; line-height:1.25; margin:.5rem 0; }
 .card-facts{ list-style:none; margin:0 0 .9rem; padding:0; font-size:.92rem; color:var(--muted); }
 .card-facts li{ padding:.15rem 0; }

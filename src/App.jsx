@@ -195,7 +195,7 @@ const GUIDES = [
     title: "Catskill Waterfalls",
     subtitle: "Catskill Park · find them, reach them, safely",
     blurb:
-      "The falls worth chasing — where to actually park, how to reach each one legally, which are family-easy, and which have hurt people. Access and honest safety beta, not a scenery list.",
+      "What the pretty lists leave out: where to park now, whether you can swim, and which spots are genuinely dangerous.",
     status: "available",
     cover: "/covers/catskill-waterfalls.jpg",
     url: "https://www.barnesandnoble.com/w/catskill-waterfalls-devlin-foster/1151459185",
@@ -208,6 +208,8 @@ const GUIDES = [
     label: "A MeanderNY Guide",
     subtitle: "An Honest, Verified Guide to Wheelchair- and Low-Stamina-Friendly Trails in the Hudson Valley and Capital Region",
     cover: "/covers/trails-that-say-yes.jpg",
+    blurb:
+      "Every trail in this book says yes: wheelchair- and low-stamina-friendly trails, checked before you drive to find out.",
     status: "available",
     url: "https://www.barnesandnoble.com/w/trails-that-say-yes-devlin-foster/1151457321",
     cta: BN_CTA,
@@ -219,6 +221,8 @@ const GUIDES = [
     label: "A Hudson Valley Almanac Guide",
     subtitle: "22 Upstate Saturdays",
     cover: "/covers/closer-than-you-think.jpg",
+    blurb:
+      "22 day-long Saturday loops through upstate farm country, from Greene County to Cooperstown and Lake George, with the stops in driving order.",
     status: "available",
     url: "https://www.barnesandnoble.com/w/closer-than-you-think-devlin-foster/1151458991",
     cta: BN_CTA,
@@ -230,6 +234,8 @@ const GUIDES = [
     label: "A Hudson Valley Almanac Guide",
     subtitle: "15 Themed Trails to Cideries, Sugarhouses, Orchards & Makers",
     cover: "/covers/choose-your-own-saturday.jpg",
+    blurb:
+      "15 themed trails through cideries, sugarhouses, orchards and makers, so you can pick your Saturday by what you feel like doing.",
     status: "available",
     url: "https://www.barnesandnoble.com/w/choose-your-own-saturday-devlin-foster/1151479117",
     cta: BN_CTA,
@@ -241,6 +247,8 @@ const GUIDES = [
     label: "A MeanderNY Guide",
     subtitle: "A Real Guide to Antiquing Across Six Counties",
     cover: "/covers/hudson-valley-finds.jpg",
+    blurb:
+      "A real guide to antiquing across six counties: six antiquing-day chapters and a full directory of shops.",
     status: "available",
     url: "https://www.barnesandnoble.com/w/hudson-valley-finds-devlin-foster/1151479099",
     cta: BN_CTA,
@@ -467,7 +475,7 @@ function GuideCard({ guide }) {
         ) : (
           guide.subtitle && <p className="card-sub">{guide.subtitle}</p>
         )}
-        <p className="card-blurb">{guide.blurb}</p>
+        {guide.blurb && <p className="card-blurb">{guide.blurb}</p>}
         {guide.note && <p className="card-note">{guide.note}</p>}
       </div>
       {guide.url && (

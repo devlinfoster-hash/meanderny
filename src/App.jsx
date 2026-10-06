@@ -256,8 +256,10 @@ const GUIDES = [
   {
     id: "freezer-full-hudson-valley",
     title: "Freezer Full (Hudson Valley)",
-    label: "A MeanderNY Guide",
+    label: "A Hudson Valley Almanac Guide",
     subtitle: "How to Buy a Half Cow, Quarter Beef, or Whole Hog from Hudson Valley Farms",
+    blurb:
+      "A plain-English guide to buying a quarter, half, or whole animal straight from a Hudson Valley farm, with a 112-farm directory.",
     status: "available",
     url: "https://www.barnesandnoble.com/w/freezer-full-devlin-foster/1151584598",
     cta: BN_CTA,
@@ -265,8 +267,10 @@ const GUIDES = [
   {
     id: "freezer-full-mohawk-valley",
     title: "Freezer Full (Mohawk Valley)",
-    label: "A MeanderNY Guide",
+    label: "A Mohawk Valley Almanac Guide",
     subtitle: "How to Buy a Half Cow, Quarter Beef, or Whole Hog from Mohawk Valley Farms",
+    blurb:
+      "A plain-English guide to buying a quarter, half, or whole animal straight from a Mohawk Valley farm, with a 100-farm directory.",
     status: "available",
     url: "https://www.barnesandnoble.com/w/freezer-full-devlin-foster/1151584565",
     cta: BN_CTA,

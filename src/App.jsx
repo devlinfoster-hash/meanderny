@@ -175,6 +175,8 @@ const GUIDES = [
     label: "A Catskill Meandering Field Guide",
     subtitle: "20 Towers, Trailheads, Cab Schedules, Maps & Day Trips (Plus the Catskills Fire Tower Challenge)",
     cover: "/covers/fire-towers.jpg",
+    blurb:
+      "All 20 fire towers, the eight Catskills challenge towers plus twelve more, with trailheads, cab schedules, maps and day trips.",
     status: "available",
     url: "https://www.barnesandnoble.com/w/fire-towers-of-the-catskills-hudson-valley-devlin-foster/1151609377",
     cta: BN_CTA,
@@ -266,6 +268,8 @@ const GUIDES = [
     label: "A MeanderNY Guide",
     subtitle: "8 Rainy Afternoons: Tasting Rooms, Studios, Markets, Museums & Bookstores in the Hudson Valley, Catskills, and Capital Region",
     cover: "/covers/bad-weather-guide.jpg",
+    blurb:
+      "Eight rainy-afternoon plans built around tasting rooms, studios, markets, museums and bookstores, for the days the trail is a washout.",
     status: "available",
     url: "https://www.barnesandnoble.com/w/bad-weather-guide-devlin-foster/1151609635",
     cta: BN_CTA,
@@ -277,6 +281,8 @@ const GUIDES = [
     label: "A MeanderNY Guide",
     subtitle: "Indie Bookshops of the Hudson Valley, Catskills, and Capital Region",
     cover: "/covers/shelf-life.jpg",
+    blurb:
+      "Indie bookshops in barns and on main streets across the Hudson Valley, Catskills and Capital Region, gathered into bookshop days.",
     status: "available",
     url: "https://www.barnesandnoble.com/w/shelf-life-devlin-foster/1151609632",
     cta: BN_CTA,

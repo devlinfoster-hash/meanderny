@@ -169,19 +169,6 @@ const GUIDES = [
     url: "https://devlinfoster.gumroad.com/l/long-path-south",
   },
   {
-    // Off sale while the guide is rewritten (Gumroad product deleted). To restore:
-    // status "available", price 11.99,
-    // url "https://devlinfoster.gumroad.com/l/catskills-fire-towers" (or the new listing).
-    id: "catskills-fire-towers",
-    title: "Catskills Fire Tower Challenge",
-    subtitle: "Catskill Park · the patch, done right",
-    blurb:
-      "The completion kit for the DEC's eight-tower challenge — best routes, parking, drive-times between towers, a printable log, and an offline map pack. Built to earn the patch without wasting a Saturday.",
-    price: null,
-    status: "coming-soon",
-    url: "",
-  },
-  {
     id: "fire-towers-catskills-hudson-valley",
     group: "field",
     title: "Fire Towers of the Catskills & Hudson Valley",

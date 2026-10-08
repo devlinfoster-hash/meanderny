@@ -86,6 +86,8 @@ const FEATURED_SERIES = "long-path";
      links      OPTIONAL [{ label, url }] secondary links under the button
      label      OPTIONAL small label above the title of a guide outside a series
                 (default "MeanderNY Field Guide"; "" hides it)
+     group      OPTIONAL key into MORE_GUIDE_GROUPS: splits "More guides" into
+                headed groups (e.g. "field"); ungrouped guides go last
      section    OPTIONAL "also-by" -> the lower-key "Also by Devlin Foster" section
                 near the bottom instead of "More guides"
 
@@ -180,7 +182,17 @@ const GUIDES = [
     url: "",
   },
   {
+    id: "fire-towers-catskills-hudson-valley",
+    group: "field",
+    title: "Fire Towers of the Catskills & Hudson Valley",
+    subtitle: "20 Towers, Trailheads, Cab Schedules, Maps & Day Trips (Plus the Catskills Fire Tower Challenge)",
+    status: "available",
+    url: "https://www.barnesandnoble.com/w/fire-towers-of-the-catskills-hudson-valley-devlin-foster/1151609377",
+    cta: BN_CTA,
+  },
+  {
     id: "rambles-1863",
+    group: "field",
     title: "Guide to Rambles from the Catskill Mountain House",
     subtitle: "The Catskills · Written 1863, walked today",
     blurb:
@@ -192,6 +204,7 @@ const GUIDES = [
   },
   {
     id: "catskill-waterfalls",
+    group: "field",
     title: "Catskill Waterfalls",
     subtitle: "Catskill Park · find them, reach them, safely",
     blurb:
@@ -203,6 +216,7 @@ const GUIDES = [
   },
   {
     id: "trails-that-say-yes",
+    group: "field",
     title: "Trails That Say Yes",
     // label and subtitle as printed on the cover
     label: "A MeanderNY Guide",
@@ -216,6 +230,7 @@ const GUIDES = [
   },
   {
     id: "closer-than-you-think",
+    group: "hudson-valley",
     title: "Closer Than You Think",
     // label and subtitle as printed on the cover
     label: "A Hudson Valley Almanac Guide",
@@ -229,6 +244,7 @@ const GUIDES = [
   },
   {
     id: "choose-your-own-saturday",
+    group: "hudson-valley",
     title: "Choose Your Own Saturday",
     // label and subtitle as printed on the cover
     label: "A Hudson Valley Almanac Guide",
@@ -242,6 +258,7 @@ const GUIDES = [
   },
   {
     id: "hudson-valley-finds",
+    group: "hudson-valley",
     title: "Hudson Valley Finds",
     // label and subtitle as printed on the cover
     label: "A MeanderNY Guide",
@@ -251,6 +268,48 @@ const GUIDES = [
       "A real guide to antiquing across six counties: six antiquing-day chapters and a full directory of shops.",
     status: "available",
     url: "https://www.barnesandnoble.com/w/hudson-valley-finds-devlin-foster/1151479099",
+    cta: BN_CTA,
+  },
+  {
+    id: "bad-weather-guide",
+    group: "hudson-valley",
+    title: "Bad Weather Guide",
+    subtitle: "8 Rainy Afternoons: Tasting Rooms, Studios, Markets, Museums & Bookstores in the Hudson Valley, Catskills, and Capital Region",
+    status: "available",
+    url: "https://www.barnesandnoble.com/w/bad-weather-guide-devlin-foster/1151609635",
+    cta: BN_CTA,
+  },
+  {
+    id: "shelf-life",
+    group: "hudson-valley",
+    title: "Shelf Life",
+    subtitle: "Indie Bookshops of the Hudson Valley, Catskills, and Capital Region",
+    status: "available",
+    url: "https://www.barnesandnoble.com/w/shelf-life-devlin-foster/1151609632",
+    cta: BN_CTA,
+  },
+  {
+    id: "freezer-full-hudson-valley",
+    group: "food",
+    title: "Freezer Full (Hudson Valley)",
+    label: "A Hudson Valley Almanac Guide",
+    subtitle: "How to Buy a Half Cow, Quarter Beef, or Whole Hog from Hudson Valley Farms",
+    blurb:
+      "A plain-English guide to buying a quarter, half, or whole animal straight from a Hudson Valley farm, with a 112-farm directory.",
+    status: "available",
+    url: "https://www.barnesandnoble.com/w/freezer-full-devlin-foster/1151584598",
+    cta: BN_CTA,
+  },
+  {
+    id: "freezer-full-mohawk-valley",
+    group: "food",
+    title: "Freezer Full (Mohawk Valley)",
+    label: "A Mohawk Valley Almanac Guide",
+    subtitle: "How to Buy a Half Cow, Quarter Beef, or Whole Hog from Mohawk Valley Farms",
+    blurb:
+      "A plain-English guide to buying a quarter, half, or whole animal straight from a Mohawk Valley farm, with a 100-farm directory.",
+    status: "available",
+    url: "https://www.barnesandnoble.com/w/freezer-full-devlin-foster/1151584565",
     cta: BN_CTA,
   },
   {
@@ -343,6 +402,13 @@ const MAPS = [
       },
     ],
   },
+];
+
+/* "More guides" groups, in display order. A guide joins one with `group: "<key>"`. */
+const MORE_GUIDE_GROUPS = [
+  { key: "field", title: "Field guides" },
+  { key: "hudson-valley", title: "Hudson Valley guides" },
+  { key: "food", title: "Food and farms" },
 ];
 
 /* --- derived lists (layout reads these; edit GUIDES, not these) ------------ */
@@ -622,6 +688,14 @@ function HomeView() {
   const moreGuides = GUIDES.filter(
     (g) => !g.series && !g.section && g.status === "available"
   );
+  const groupKeys = MORE_GUIDE_GROUPS.map((grp) => grp.key);
+  const moreGroups = [
+    ...MORE_GUIDE_GROUPS.map((grp) => ({
+      ...grp,
+      guides: moreGuides.filter((g) => g.group === grp.key),
+    })),
+    { key: "other", guides: moreGuides.filter((g) => !groupKeys.includes(g.group)) },
+  ].filter((grp) => grp.guides.length > 0);
   const alsoBy = GUIDES.filter((g) => g.section === "also-by" && g.status === "available");
   const comingGuides = GUIDES.filter((g) => g.status === "coming-soon");
 
@@ -694,11 +768,16 @@ function HomeView() {
           <section className="sec sec--band" id="more-guides">
             <div className="wrap">
               <div className="eyebrow eyebrow--neutral">More guides</div>
-              <div className="grid">
-                {moreGuides.map((g) => (
-                  <GuideCard key={g.id} guide={g} />
-                ))}
-              </div>
+              {moreGroups.map((grp) => (
+                <div className="guide-group" key={grp.key}>
+                  {grp.title && <h3 className="group-title">{grp.title}</h3>}
+                  <div className="grid">
+                    {grp.guides.map((g) => (
+                      <GuideCard key={g.id} guide={g} />
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
         )}
@@ -983,6 +1062,9 @@ html{ scroll-behavior:smooth; }
 
 /* cards */
 .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:22px; margin-top:26px; }
+.group-title{ font-weight:700; font-size:1.05rem; margin:clamp(28px,4vw,40px) 0 0; padding-bottom:8px; border-bottom:1px solid var(--line); }
+.eyebrow + .guide-group .group-title{ margin-top:14px; }
+.guide-group .grid{ margin-top:18px; }
 .grid--books{ grid-template-columns:repeat(3,1fr); }
 .grid--maps{ grid-template-columns:repeat(2,1fr); }
 .card{ background:var(--card); border:1px solid var(--line); border-top:5px solid var(--accent); border-radius:16px; padding:20px; display:flex; flex-direction:column; box-shadow:var(--shadow); min-width:0; }
